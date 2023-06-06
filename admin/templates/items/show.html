@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block title %}
+  商品詳細
+{% endblock %}
+{% block body %}
+<h3>商品詳細</h3>
+<table>
+  <tbody>
+    <tr>
+      <td>ID</td>
+      <td>{{ item.id }}</td>
+    </tr>
+    <tr>
+      <td>商品名</td>
+      <td>{{ item.name }}</td>
+    </tr>
+    <tr>
+      <td>分類</td>
+      <td>{{ item.category.name }}</td>
+    </tr>
+    <tr>
+      <td>価格</td>
+      <td>{{ item.price }}円</td>
+    </tr>
+  </tbody>
+</table>
+{% endblock %}

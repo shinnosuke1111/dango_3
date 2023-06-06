@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+  </head>
+  <body>
+    <h3>
+      <a href="{{url_for('index')}}">商品一覧</a>
+      {% if session.get('admin_logged_in'): %}
+        <a href="{{url_for('logout')}}">ログアウト</a>
+      {% else %}
+        <a href="{{url_for('login')}}">ログイン</a>
+      {% endif %}
+    </h3>
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+      {% if category == 'success' %}
+        <div style="background-color: #98fb98;">
+          {{ message }}
+        </div>
+      {% elif category == 'error' %}
+        <div style="background-color: #ffc0cb;">
+          {{ message }}
+        </div>
+      {% endif %}
+    {% endfor %}
+    {% block body %}{% endblock %}
+  </body>
+</html>

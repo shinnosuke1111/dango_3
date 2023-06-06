@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block body %}
+  <!-- カート -->
+  <h3>
+    現在のカート
+    <a href="{{url_for('order.new')}}">注文確認へ</a>
+  </h3>
+  <table border="3">
+    <thead>
+      <tr>
+        <th>商品ID</th>
+        <th>商品名</th>
+        <th>単価</th>
+        <th>個数</th>
+        <th>小計</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if cart_details %}
+        {% for cart_detail in cart_details: %}
+          {% set item = cart_detail.get('item') %}
+          {% set item_num = cart_detail.get('item_num') %}
+          {% set sub_total_price = cart_detail.get('sub_total_price') %}
+          <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.price }}円</td>
+            <td>{{ item_num }}</td>
+            <td>{{ sub_total_price }}円</td>
+            <td>
+              <form action="{{url_for('cart.delete', item_id=item.id)}}" method="POST">
+                <button type="submit">削除</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+        <tr>
+          <td colspan="4">
+          </td>
+          <td>{{ total_price }}円（合計）</td>
+          <td>
+            <form action="{{url_for('cart.delete', item_id='all')}}" method="POST">
+              <button type="submit">削除</button>
+            </form>
+          </td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block title %}
+  商品編集
+{% endblock %}
+{% block body %}
+<h3>商品編集</h3>
+<form action="{{url_for('update', id=item.id)}}" method="POST">
+  <div>
+    名前
+    <input type="text" name="name" value="{{ item.name }}">
+  </div>
+  <div>
+    分類
+    <select name="category_id">
+      {% for category in categories %}
+        <option value="{{ category.id }}" {{ "selected" if category.id == item.category_id }}>{{ category.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    値段
+    <input type="number" min="0" name="price" value="{{ item.price }}">円
+  </div>
+  <div>
+    <button type="submit">送信</button>
+  </div>
+</form>
+{% endblock %}

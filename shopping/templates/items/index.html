@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block body %}
+  <!-- 商品一覧 -->
+  <h3>
+    商品一覧
+    <a href="{{url_for('item.index')}}">すべて</a>
+    {% for category in categories %}
+      <a href="{{url_for('item.index', category_id=category.id)}}">{{ category.name }}</a>
+    {% endfor %}
+  </h3>
+  <table border="3">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>商品名</th>
+        <th>分類</th>
+        <th>値段</th>
+        <th>カート追加</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+        <tr>
+          <td>{{ item.id }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.category.name }}</td>
+          <td>{{ item.price }}円</td>
+          <td>
+            <form action="{{url_for('cart.create')}}" method="POST">
+              <input type="hidden" value="{{ item.id }}" name="item_id">
+              <input type="number" name="item_num" style="width:50px;" min="0" max="5">個
+              <button type="submit">送信</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

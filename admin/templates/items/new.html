@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block title %}
+  商品作成
+{% endblock %}
+{% block body %}
+<h3>商品作成</h3>
+<form action="{{url_for('create')}}" method="POST">
+  <div>
+    名前
+    <input type="text" name="name">
+  </div>
+  <div>
+    分類
+    <select name="category_id">
+      {% for category in categories %}
+        <option value="{{ category.id }}">{{ category.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    値段
+    <input type="number" min="0" name="price">円
+  </div>
+  <div>
+    <button type="submit">送信</button>
+  </div>
+</form>
+{% endblock %}
