@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block title %}
+  従業員一覧
+{% endblock %}
+{% block body %}
+<h3>従業員一覧</h3>
+<table border="3">
+  <thead>
+    <tr>
+      <td>入社年度</td>
+      <td>名前</td>
+      <td>フリガナ</td>
+      <td>配属</td>
+      <td></td>
+    </tr>
+  </thead>
+  <tbody>
+    {% for a in account %}
+      <tr>
+        <td>{{ account.year }}</td>
+        <td>{{ account.name }}</td>
+        <td>{{ account.ruby }}</td>
+        <td>{{ account.dept }}部{{account.group}}グループ</td>
+        <td><a href="{{url_for('show', id=basic.id)}}">詳細</a>
+          <form action="{{url_for('delete', id=account.id)}}" method="POST">
+            <button type="submit">アカウント削除</button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

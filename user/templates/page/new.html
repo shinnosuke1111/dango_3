@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block title %}
+  アカウント登録
+{% endblock %}
+{% block body %}
+<h3>アカウント登録</h3>
+<form action="{{url_for('new')}}" method="POST">
+  <div>
+    メールアドレス<br>
+    <input type="email" name="email">
+  </div>
+  <div>
+    パスワード<br>
+    <input type="password" name="password">
+  </div>
+  <div>
+    名前<br>
+    <input type="text" name="name">
+  </div>
+  <div>
+    フリガナ<br>
+    <input type="text" name="ruby">
+  </div>
+  <div>
+    所属<br>
+    <select name="dept">
+      <option value="経営管理">経営管理</option>
+      <option value="人事">人事</option>
+      <option value="システム開発運営">システム開発運営</option>
+      <option value="システム運用管理">システム運用管理</option> 
+    </select>
+    部<br>
+    <select name="group">
+      <option value="---">---</option>
+      <option value="店舗顧客システム">店舗顧客システム</option>
+      <option value="共通システム">共通システム</option>
+      <option value="共通インフラ/セキュリティ">共通インフラ/セキュリティ</option>
+    </select>
+    グループ
+  </div>
+  <div>
+    入社年度<br>
+    <input type="number" min="1950", max="3000" name="year">
+  </div>
+  <div>
+  <a href="{{url_for('basic_new', id=basic.id)}}">
+    <button type="submit">登録</button>
+  </a>
+  </div>
+</form>
+{% endblock %}

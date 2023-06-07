@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block title %}
+  プロフィール
+{% endblock %}
+{% block body %}
+<h3>{{ account.name }}</h3>
+<table>
+  <tbody>
+    <tr>
+      <td>氏名/フリガナ</td>
+      <td>{{ account.name }}/{{ account.ruby}}</td>
+    </tr>
+    <tr>
+      <td>所属</td>
+      <td>{{ account.dept }}/{{ account.group}}/{{basic_information.team}}</td>
+    </tr>
+    <tr>
+      <td>入社年度</td>
+      <td>{{ account.year }}年度</td>
+    </tr>
+    <tr>
+      <td>誕生日</td>
+      <td>{{ basic.information.birth_month }}月{{basic_information.birth_day}}日</td>
+    </tr>
+    <tr>
+      <td>趣味</td>
+      <td>{{ basic.information.hobby }}</td>
+    </tr>
+    <tr>
+      <td>ひとこと</td>
+      <td>{{ basic.information.word }}</td>
+    </tr>
+  </tbody>
+</table>
+{% endblock %}

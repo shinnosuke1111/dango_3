@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block title %}
+  基本情報登録
+{% endblock %}
+{% block body %}
+<h3>基本情報登録</h3>
+<a href="{{url_for('top')}}">
+  <button type="submit">SKIPする</button>
+</a>
+<form action="{{url_for('basic_new')}}" method="POST">
+  所属チーム<br>
+  <input type="text" name="team">
+    チーム
+  </div>
+  <div>
+    入社年度<br>
+    <input type="text" name="year" >
+  </div>
+  <div>
+    誕生日<br>
+    <select name="birth_month">
+    {% for i in range(1,13) %}
+      <option value="i">i</option>
+    {% endfor %}
+    </select>
+    月
+    <select name="birth_day">
+    {% for j in range(1,32) %}
+      <option value="j">j</option>
+    {% endfor %}
+    </select>
+    日
+  </div>
+  <div>
+    趣味<br>
+    <textarea type="text" name="hooby" cols="30" rows="3" maxlength="90"
+    placeholder="プログラミング"></textarea>
+    <!-- <input type="text" name="hobby"> -->
+  </div>
+  <div>
+    ひとこと<br>
+    <textarea type="text" name="word" cols="30" rows="3" maxlength="90"
+    placeholder="よろしくお願いいたします。"></textarea>
+    <!-- <input type="text" name="word" value="{{ basic_information.word }}"> -->
+  </div>
+  <div>
+    <button type="submit">登録</button>
+  </div>
+</form>
+</form>
+{% endblock %}
