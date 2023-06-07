@@ -1,4 +1,2 @@
-from .category import Category
-from .item import Item
-from .order import Order
-from .customer import Customer
+from .account import Account
+from .basic_information import Basic_information

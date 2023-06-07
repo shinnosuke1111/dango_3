@@ -22,7 +22,7 @@ from functools import wraps
 def login_check(view):
   @wraps(view)
   def inner(*args, **kwargs):
-    if not session.get('admin_logged_in'):
+    if not session.get('logged_in'):
       flash('ログインしてください', 'error')
       return redirect(url_for('login'))    
     return view(*args, **kwargs)
@@ -32,16 +32,18 @@ def login_check(view):
 # ログイン
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+  email_address = Account.query.get(email)
   if request.method == 'POST':
-    if request.form.get('email') != app.config['ADMIN_USER_ID']:
-      flash('ユーザIDが異なります', 'error')
-    elif request.form.get('password') != app.config['ADMIN_PASSWORD']:
-      flash('パスワードが異なります', 'error')
-    else:
-      session['admin_logged_in'] = True
-      flash('ログインしました', 'success')
-      return redirect(url_for('index'))
-  return render_template('login.html')
+    for i in email_address:
+      if request.form.get('email') != i:
+        flash('メールアドレスが異なります', 'error')
+      elif request.form.get('password') != i:
+        flash('パスワードが異なります', 'error')
+      else:
+        session['logged_in'] = True
+        flash('ログインしました', 'success')
+        return redirect(url_for('index'))
+      return render_template('login.html')
 
 
 # ログアウト
@@ -163,16 +165,3 @@ def update(account_id):
     return redirect(url_for('edit'))
   flash('商品が更新されました', 'success')
   return redirect(url_for('show'))
-
-
-# アカウント削除処理
-@app.route('/<int:id>/delete', methods=['POST'])
-@login_check
-def delete(account_id):
-  account =Account.query.get(account_id)
-  basic_information = Basic_information(account_id)
-  db.session.delete(account)
-  db.session.delete(basic_information)
-  db.session.commit()
-  flash('商品が削除されました', 'success')
-  return redirect(url_for('index'))
