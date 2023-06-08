@@ -24,7 +24,7 @@
         <td>{{ account.name }}</td>
         <td>{{ account.ruby }}</td>
         <td>{{ account.dept }}部{{account.group}}グループ</td>
-        <td><a href="{{url_for('show', id=basic.id)}}">詳細</a>
+        <td><a href="{{url_for('show', id=account.id)}}">詳細</a>
           <form action="{{url_for('delete', id=account.id)}}" method="POST">
             <button type="submit" style="background-color:rgb(223, 223, 223); border-color:rgb(223, 223, 223); color:#941f44">アカウント削除</button>
           </form>
