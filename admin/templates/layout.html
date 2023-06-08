@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel='stylesheet' href='layout.css'>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
   </head>
-  <body style="background:#ccffa9">
+  <body style="background:#941f44">
     <h3>
       <a href="{{url_for('top')}}">トップ</a>
       {% if session.get('admin_logged_in'): %}
@@ -16,11 +17,11 @@
     </h3>
     {% for category, message in get_flashed_messages(with_categories=true) %}
       {% if category == 'success' %}
-        <div style="background-color: #5aff44;">
+        <div style="background-color: #c93c3c;">
           {{ message }}
         </div>
       {% elif category == 'error' %}
-        <div style="background-color: #d5ff62;">
+        <div style="background-color: #796262;">
           {{ message }}
         </div>
       {% endif %}
