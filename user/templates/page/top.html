@@ -1,17 +1,20 @@
+<head>
+  <link rel='stylesheet' href='top.css'>
+</head>
 {% extends "layout.html" %}
 {% block title %}
   従業員一覧
 {% endblock %}
 {% block body %}
 <h3>従業員一覧</h3>
-<table border="3">
+<table>
   <thead>
     <tr>
-      <td>入社年度</td>
-      <td>名前</td>
-      <td>フリガナ</td>
-      <td>配属</td>
-      <td></td>
+      <td class="co">入社年度</td>
+      <td class="co">名前</td>
+      <td class="co">フリガナ</td>
+      <td class="co">配属</td>
+      <td colspan="3" class="co"></a></td>
     </tr>
   </thead>
   <tbody>

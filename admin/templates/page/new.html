@@ -1,47 +1,54 @@
+<head>
+  <link rel='stylesheet' href='update.css'>
+</head>
 {% extends "layout.html" %}
 {% block title %}
   アカウント作成
 {% endblock %}
 {% block body %}
 <h3>アカウント作成</h3>
+<table>
 <form action="{{url_for('new')}}" method="POST">
-  <div>
-    メールアドレス<br>
-    <input type="email" name="email">
-  </div>
-  <div>
-    パスワード<br>
-    <input type="password" name="password">
-  </div>
-  <div>
-    名前<br>
-    <input type="text" name="name">
-  </div>
-  <div>
-    フリガナ<br>
-    <input type="text" name="ruby">
-  </div>
-  <div>
-    所属<br>
-    <select name="dept">
+  <tr>
+    <td class="co">メールアドレス</td>
+    <td>　　<input type="email" name="email"></td>
+  </tr>
+  <tr>
+    <td class="co">パスワード</td>
+    <td>　　<input type="password" name="password"></td>
+  </tr>
+  <tr>
+    <td class="co">名前</td>
+    <td>　　<input type="text" name="name"></td>
+  </tr>
+  <tr>
+    <td class="co">フリガナ</td>
+    <td>　　<input type="text" name="ruby"></td>
+  </tr>
+  <tr>
+    <td class="co">所属</td>
+    <td>　　<select name="dept">
       <option value="経営管理">経営管理</option>
       <option value="人事">人事</option>
       <option value="システム開発運営">システム開発運営</option>
       <option value="システム運用管理">システム運用管理</option> 
     </select>
     部<br>
-    <select name="group">
+    　　<select name="group">
       <option value="---">---</option>
       <option value="店舗顧客システム">店舗顧客システム</option>
       <option value="共通システム">共通システム</option>
       <option value="共通インフラ/セキュリティ">共通インフラ/セキュリティ</option>
     </select>
     グループ
-  </div>
-  <div>
-    入社年度<br>
-    <input type="number" min="1950", max="3000" name="year">
-  </div>
+    </td>
+  </tr>
+  <tr>
+    <td class="co">入社年度</td>
+    <td>　　<input type="number" min="1950", max="3000" name="year"></td>
+  </tr>
+</table>
+<h3></h3>
   <div>
     <button type="submit">作成</button>
   </div>

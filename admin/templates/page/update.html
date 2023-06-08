@@ -1,81 +1,84 @@
+<head>
+  <link rel='stylesheet' href='update.css'>
+</head>
 {% extends "layout.html" %}
 {% block title %}
   内容編集
 {% endblock %}
 {% block body %}
 <h3>編集</h3>
-<form action="{{url_for('update', id=item.id)}}" method="POST">
-  <div>
-    メールアドレス
-    <br>
-    <input type="email" name="email" value="{{ account.email }}">
-  </div>
-  <div>
-    パスワード
-    <br>
-    <input type="password" name="password" value="{{ account.password }}">
-  </div>
-  <div>
-    名前
-    <br>
-    <input type="text" name="name" value="{{ account.name }}">
-  </div>
-  <div>
-    フリガナ
-    <br>
-    <input type="text" name="ruby" value="{{ account.ruby }}">
-  </div>
-  <div>
-    所属<br>
-    <select name="dept">
-      <option value="経営管理">経営管理</option>
-      <option value="人事">人事</option>
-      <option value="システム開発運営">システム開発運営</option>
-      <option value="システム運用管理">システム運用管理</option> 
-    </select>
-    部<br>
-    <select name="group">
-      <option value="---">---</option>
-      <option value="店舗顧客システム">店舗顧客システム</option>
-      <option value="共通システム">共通システム</option>
-      <option value="共通インフラ/セキュリティ">共通インフラ/セキュリティ</option>
-    </select>
-    グループ<br>
-    <input type="text" name="team" value="{{ basic_information.team }}">
-    チーム
-  </div>
-  <div>
-    入社年度<br>
-    <input type="text" name="year" value="{{ account.year }}">
-  </div>
-  <div>
-    誕生日<br>
-    <select name="birth_month">
-    {% for i in range(1,13) %}
-      <option value="i">i</option>
-    {% endfor %}
-    </select>
-    月
-    <select name="birth_day">
-    {% for j in range(1,32) %}
-      <option value="j">j</option>
-    {% endfor %}
-    </select>
-    日
-  </div>
-  <div>
-    趣味<br>
-    <textarea type="text" name="hooby" cols="30" rows="3" maxlength="90"
-    value="{{ basic_information.hobby }}"></textarea>
-  </div>
-  <div>
-    ひとこと<br>
-    <textarea type="text" name="word" cols="30" rows="3" maxlength="90"
-    value="{{ basic_information.word }}"></textarea>
-    <!-- <input type="text" name="hobby" value="{{ basic_information.hobby }}"> -->
-  </div>
-  <div>
-    <button type="submit">修正</button>
-  </div>
-</form>
-{% endblock %}
+<table>
+  <form action="{{url_for('update', id=item.id)}}" method="POST">
+    <tr>
+      <td class="co">メールアドレス</td>
+      <td>　　<input type="email" name="email" value="{{ account.email }}"></td>
+    </tr>
+    <tr>
+      <td class="co">パスワード</td>
+      <td>　　<input type="password" name="password" value="{{ account.password }}"></td>
+    </tr>
+    <tr>
+      <td class="co">名前</td>
+      <td>　　<input type="text" name="name" value="{{ account.name }}"></td>
+    </tr>
+    <tr>
+      <td class="co">フリガナ</td>
+      <td>　　<input type="text" name="ruby" value="{{ account.ruby }}"></td>
+    </tr>
+    <tr>
+      <td class="co">所属</td>
+      <td>　　<select name="dept">
+        <option value="経営管理">経営管理</option>
+        <option value="人事">人事</option>
+        <option value="システム開発運営">システム開発運営</option>
+        <option value="システム運用管理">システム運用管理</option> 
+      </select>
+      部<br>
+      　　<select name="group">
+        <option value="---">---</option>
+        <option value="店舗顧客システム">店舗顧客システム</option>
+        <option value="共通システム">共通システム</option>
+        <option value="共通インフラ/セキュリティ">共通インフラ/セキュリティ</option>
+      </select>
+      グループ<br>
+      　　<input type="text" name="team" value="{{ basic_information.team }}">
+      チーム
+      </td>
+    </tr>
+    <tr>
+      <td class="co">入社年度</td>
+      <td>　　<input type="text" name="year" value="{{ account.year }}"></td>
+    </tr>
+    <tr>
+      <td class="co">誕生日</td>
+      <td>　　<select name="birth_month">
+        {% for i in range(1,13) %}
+          <option value="i">i</option>
+        {% endfor %}
+        </select>
+        月
+        <select name="birth_day">
+        {% for j in range(1,32) %}
+          <option value="j">j</option>
+        {% endfor %}
+        </select>
+        日</td>
+    </tr>
+    <tr>
+      <td class="co">趣味</td>
+      <td>　　<textarea type="text" name="hooby" cols="30" rows="3" maxlength="90"
+        value="{{ basic_information.hobby }}"></textarea></td>
+    </tr>
+    <tr>
+      <td class="co">ひとこと</td>
+      <td>　　<textarea type="text" name="hooby" cols="30" rows="3" maxlength="90"
+        value="{{ basic_information.hobby }}"></textarea></td>
+    </tr>
+      <!-- <input type="text" name="hobby" value="{{ basic_information.hobby }}"> -->
+  </table>
+  <h4></h4>
+    <div>
+      <button type="submit">修正</button>
+    </div>
+  </form>
+  {% endblock %}
