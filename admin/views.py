@@ -63,9 +63,10 @@ def index():
 # 従業員詳細(基本情報)を表示
 @app.route('/items/<int:id>')
 @login_check
-def show(basic_id):
-  basic_information = Basic_information.query.get(basic_id)
-  return render_template('items/show.html', basic_information=basic_information)
+def show(account_id):
+  account = Account.query.get(account_id)
+  basic_information = Basic_information.query.get(account_id)
+  return render_template('items/show.html', account=account, basic_information=basic_information, name=name, ruby=ruby, dept=dept, group=group, team=team, year=year, birth_month=birth_month, birth_day=birth_day, hobby=hobby, word=word)
 
 
 # アカウント作成画面を表示(=admin用)
@@ -94,8 +95,8 @@ def create():
   except:
     flash('入力した値を再度確認してください', 'error')
     return redirect(url_for('new'))
-  flash('商品が作成されました', 'success')
-  return redirect(url_for('index'))
+  flash('アカウントが作成されました', 'success')
+  return render_template('items/basic_new.html')
 
 
 # 基本情報登録画面を表示
@@ -109,7 +110,7 @@ def new():
 @app.route('/items/create', methods=['POST'])
 @login_check
 def create():
-   basic_information = Basic_information(
+  basic_information = Basic_information(
     basic_id = request.form.get('basic_id'),
     account_id = request.form.get('account_id'),
     birth_month = request.form.get('birth_month'),
@@ -132,8 +133,8 @@ def create():
 @login_check
 def edit(account_id):
   account = Account.query.get(account_id)
-  basic_information = basic_information.query.get(basic_id)
-  return render_template('items/update.html', account = account, basic_information = basic_information)
+  basic_information = basic_information.query.get(account_id)
+  return render_template('items/update.html', account = account, basic_information = basic_information, email=email, password=password, name=name, ruby=ruby, team=team, year=year, hobby=hobby, word=word)
 
 
 # 登録情報修正処理

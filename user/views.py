@@ -29,27 +29,48 @@ def login_check(view):
   return inner
 
 
+# 初回ログイン
+@app.route('/first_login', methods=['GET', 'POST'])
+def first_login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        # Userテーブルからusernameに一致するユーザを取得
+        try:
+            account = Account.query.filter_by(email=email).first()
+            if account.password == password:
+              login_user(account) 
+              return render_template('items/basic_new.html')
+        except:
+            flash('正しいメールアドレスとパスワードを入力して下さい。')
+            # get_flashed_messages()
+            return redirect('/first_login')
+
+
+
+
 # ログイン
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-  email_address = Account.query.get(email)
-  if request.method == 'POST':
-    for i in email_address:
-      if request.form.get('email') != i:
-        flash('メールアドレスが異なります', 'error')
-      elif request.form.get('password') != i:
-        flash('パスワードが異なります', 'error')
-      else:
-        session['logged_in'] = True
-        flash('ログインしました', 'success')
-        return redirect(url_for('index'))
-      return render_template('login.html')
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        # Userテーブルからusernameに一致するユーザを取得
+        try:
+            account = Account.query.filter_by(email=email).first()
+            if account.password == password:
+              login_user(account) 
+              return redirect('/items')
+        except:
+            flash('正しいメールアドレスとパスワードを入力して下さい。')
+            # get_flashed_messages()
+            return render_template('login.html')
 
 
 # ログアウト
 @app.route('/logout')
 def logout():
-  session.pop('admin_logged_in', None)
+  session.pop('logged_in', None)
   flash('ログアウトしました', 'success')
   return redirect(url_for('login'))
 
@@ -66,18 +87,19 @@ def index():
 @app.route('/items/<int:id>')
 @login_check
 def show(basic_id):
-  basic_information = Basic_information.query.get(basic_id)
-  return render_template('items/show.html', basic_information=basic_information)
+  account = Account.query.get(account_id)
+  basic_information = Basic_information.query.get(account_id)
+  return render_template('items/show.html', basic_information=basic_information, account=account)
 
 
-# アカウント作成画面を表示(=admin用)
+# アカウント登録画面を表示(=user用)
 @app.route('/items/new')
 @login_check
 def new():
   return render_template('items/new.html')
 
 
-# アカウント作成処理(=admin用)
+# アカウント登録処理(=user用)
 @app.route('/items/create', methods=['POST'])
 @login_check
 def create():
@@ -96,21 +118,21 @@ def create():
   except:
     flash('入力した値を再度確認してください', 'error')
     return redirect(url_for('new'))
-  flash('商品が作成されました', 'success')
-  return redirect(url_for('index'))
+  flash('アカウントが作成されました', 'success')
+  return render_template('items/first.html')
 
 
 # 基本情報登録画面を表示
 @app.route('/items/new')
 @login_check
-def new():
+def basic_new():
   return render_template('items/basic_new.html')
 
 
 # 基本情報登録処理
 @app.route('/items/create', methods=['POST'])
 @login_check
-def create():
+def basic_create():
    basic_information = Basic_information(
     basic_id = request.form.get('basic_id'),
     account_id = request.form.get('account_id'),
@@ -125,7 +147,7 @@ def create():
   except:
     flash('入力した値を再度確認してください', 'error')
     return redirect(url_for('new'))
-  flash('商品が作成されました', 'success')
+  flash('登録されました', 'success')
   return redirect(url_for('index'))
 
 
@@ -134,8 +156,8 @@ def create():
 @login_check
 def edit(account_id):
   account = Account.query.get(account_id)
-  basic_information = basic_information.query.get(basic_id)
-  return render_template('items/update.html', account = account, basic_information = basic_information)
+  basic_information = basic_information.query.get(account_id)
+  return render_template('items/update.html', account = account, basic_information = basic_information, email=email, password=password, name=name, ruby=ruby, team=team, year=year, hobby=hobby, word=word)
 
 
 # 登録情報修正処理
@@ -144,17 +166,17 @@ def edit(account_id):
 def update(account_id):
   account = Account.query.get(account_id)
   basic_information = Basic_information(account_id)
-  email = request.form.get('email'),
-  password = request.form.get('password'),
-  name = request.form.get('name'),
-  ruby = request.form.get('ruby'),
-  dept = request.form.get('dept'),
-  group = request.form.get('group'),
-  year = request.form.get('year'),
-  birth_month = request.form.get('birth_month'),
-  birth_day = request.form.get('birth_day'),
-  team = request.form.get('team'),
-  hobby = request.form.get('hobby'),
+  email = request.form.get('email')
+  password = request.form.get('password')
+  name = request.form.get('name')
+  ruby = request.form.get('ruby')
+  dept = request.form.get('dept')
+  group = request.form.get('group')
+  year = request.form.get('year')
+  birth_month = request.form.get('birth_month')
+  birth_day = request.form.get('birth_day')
+  team = request.form.get('team')
+  hobby = request.form.get('hobby')
   word = request.form.get('word')
   
   try:
@@ -163,5 +185,5 @@ def update(account_id):
   except:
     flash('入力した値を再度確認してください', 'danger')
     return redirect(url_for('edit'))
-  flash('商品が更新されました', 'success')
+  flash('登録情報が更新されました', 'success')
   return redirect(url_for('show'))
