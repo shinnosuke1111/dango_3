@@ -171,8 +171,8 @@ def edit(account_id):
 @app.route('/users/<int:account_id>/edit', methods=['POST'])
 @login_check
 def update(account_id):
-  account = Account.query.get(account_id)
-  basic_information = Basic_information(account_id)
+  # account = Account.query.get(account_id)
+  # basic_information = Basic_information.query.get(account_id)
   email = request.form.get('email'),
   password = request.form.get('password'),
   name = request.form.get('name'),
