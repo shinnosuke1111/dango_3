@@ -2,11 +2,11 @@ table {
   border-collapse: collapse;
 }
 table{
-  width:800px
+  width:400px
   }
 table {
   border-collapse: collapse;
-  border: solid 5px ;/*表全体を線で囲う*/
+  border: solid 5px #941f44;/*表全体を線で囲う*/
 }
 table td{
   border-right:3px solid rgb(223, 223, 223);

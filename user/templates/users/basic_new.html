@@ -1,5 +1,6 @@
 <head>
-  <link rel='stylesheet' href='update.css'>
+  <link rel="stylesheet" type="text/css"
+  href="{{ 'update.css' | staticfile }}">
 </head>
 {% extends "layout.html" %}
 {% block title %}
@@ -11,7 +12,7 @@
   <button type="submit">SKIPする</button>
 </a>
 <table>
-<form action="{{url_for('basic_new')}}" method="POST">
+<form action="{{url_for('basic_create')}}" method="POST">
   <tr>
     <td class="co">所属チーム</td>
     <td>　　<input type="text" name="team">チーム</td>

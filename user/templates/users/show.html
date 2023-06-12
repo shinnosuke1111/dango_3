@@ -1,5 +1,6 @@
 <head>
-  <link rel='stylesheet' href='show.css'>
+  <link rel="stylesheet" type="text/css"
+  href="{{ 'show.css' | staticfile }}">
 </head>
 {% extends "layout.html" %}
 {% block title %}
@@ -14,7 +15,7 @@
     </tr>
     <tr>
       <td class="co">所属</td>
-      <td>　　{{ account.dept }}<br>　　{{ account.group}}<br>　　{{basic_information.team}}</td>
+      <td>　　{{ account.dept }}<br>　　{{ account.group_name}}<br>　　{{basic_information.team}}</td>
     </tr>
     <tr>
       <td class="co">入社年度</td>

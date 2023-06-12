@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel='stylesheet' href='layout.css'>
+    <link rel="stylesheet" type="text/css"
+    href="{{ 'layout.css' | staticfile }}">
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
   </head>
   <body style="background:#941f44">
     <h3>
-      <a href="{{url_for('top')}}">トップ</a>
+      <a href="{{url_for('index')}}">トップ</a>
       {% if session.get('admin_logged_in'): %}
         <a href="{{url_for('logout')}}">ログアウト</a>
         <a href="{{url_for('new')}}">アカウント作成</a>

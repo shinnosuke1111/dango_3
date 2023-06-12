@@ -1,5 +1,6 @@
 <head>
-  <link rel='stylesheet' href='update.css'>
+  <link rel="stylesheet" type="text/css"
+  href="{{ 'update.css' | staticfile }}">
 </head>
 {% extends "layout.html" %}
 {% block title %}
@@ -34,7 +35,7 @@
         <option value="システム運用管理">システム運用管理</option> 
       </select>
       部<br>
-      　　<select name="group">
+      　　<select name="group_name">
         <option value="---">---</option>
         <option value="店舗顧客システム">店舗顧客システム</option>
         <option value="共通システム">共通システム</option>

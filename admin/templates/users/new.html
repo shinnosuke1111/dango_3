@@ -1,12 +1,13 @@
 <head>
-  <link rel='stylesheet' href='update.css'>
+  <link rel="stylesheet" type="text/css"
+  href="{{ 'update.css' | staticfile }}">
 </head>
 {% extends "layout.html" %}
 {% block title %}
-  アカウント登録
+  アカウント作成
 {% endblock %}
 {% block body %}
-<h3>アカウント登録</h3>
+<h3>アカウント作成</h3>
 <table>
 <form action="{{url_for('create')}}" method="POST">
   <tr>
@@ -34,7 +35,7 @@
       <option value="システム運用管理">システム運用管理</option> 
     </select>
     部<br>
-    　　<select name="group">
+    　　<select name="group_name">
       <option value="---">---</option>
       <option value="店舗顧客システム">店舗顧客システム</option>
       <option value="共通システム">共通システム</option>
@@ -50,9 +51,7 @@
 </table>
 <h3></h3>
   <div>
-    <!-- <a href="{{url_for('first_login', id=basic.id)}}"> -->
-    <button type="submit" style="background-color:#941f44; border-color:#941f44; color:aliceblue">登録</button>
-    <!-- </a> -->
+    <button type="submit" style="background-color:rgb(223, 223, 223); border-color:rgb(223, 223, 223); color:#941f44">作成</button>
   </div>
 </form>
 {% endblock %}

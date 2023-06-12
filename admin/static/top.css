@@ -1,7 +1,13 @@
 
 table {
     border-collapse: collapse;
-    border-bottom: solid 2px #ffe5e5;
+    /* border-bottom: solid 2px #ffe5e5; */
+  }
+table tr{
+  border-bottom: solid 2px #ffe5e5;
+}
+table{
+  width:800px
   }
 .co{
       color:#941f44;
