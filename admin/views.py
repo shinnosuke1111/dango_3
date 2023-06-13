@@ -171,28 +171,30 @@ def edit(account_id):
 @app.route('/users/<int:account_id>/edit', methods=['POST'])
 @login_check
 def update(account_id):
-  # account = Account.query.get(account_id)
-  # basic_information = Basic_information.query.get(account_id)
-  email = request.form.get('email'),
-  password = request.form.get('password'),
-  name = request.form.get('name'),
-  ruby = request.form.get('ruby'),
-  dept = request.form.get('dept'),
-  group = request.form.get('group'),
-  year = request.form.get('year'),
-  birth_month = request.form.get('birth_month'),
-  birth_day = request.form.get('birth_day'),
-  team = request.form.get('team'),
-  hobby = request.form.get('hobby'),
+  account = Account.query.get(account_id)
+  basic_information = Basic_information.query.get(account_id)
+  email = request.form.get('email')
+  password = request.form.get('password')
+  name = request.form.get('name')
+  ruby = request.form.get('ruby')
+  dept = request.form.get('dept')
+  group_name = request.form.get('group_name')
+  year = request.form.get('year')
+  birth_month = request.form.get('birth_month')
+  birth_day = request.form.get('birth_day')
+  team = request.form.get('team')
+  hobby = request.form.get('hobby')
   word = request.form.get('word')
  
   try:
     db.session.merge(account)
     db.session.merge(basic_information)
     db.session.commit()
+    
   except:
-    flash('入力した値を再度確認してください', 'danger')
-    return redirect(url_for('edit'))
+    # flash('入力した値を再度確認してください', 'danger')
+    return "miss"
+    # return redirect(url_for('edit'))
   flash('情報が更新されました', 'success')
   return redirect(url_for('show'))
 
@@ -204,12 +206,12 @@ def update(account_id):
 @login_check
 def delete(account_id):
   account =Account.query.get(account_id)
-  basic_information = Basic_information(account_id)
-  db.session.delete(accounts)
+  basic_information = Basic_information.query.get(account_id)
+  db.session.delete(account)
   db.session.delete(basic_information)
   db.session.commit()
-  flash('商品が削除されました', 'success')
-  return redirect(url_for('top'))
+  flash('アカウントが削除されました', 'success')
+  return redirect(url_for('index'))
 
 @app.template_filter('staticfile')
 def staticfile_filter(fname):
