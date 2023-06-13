@@ -1,0 +1,16 @@
+<div style="text-align: center">
+<img src="OIP.jpg" alt="JFR" width="200" height="200"><br>
+<h3>JFRIC従業員名簿</h3>
+<form action="{{url_for('login')}}" method="POST">
+     <div>
+        メールアドレス
+        <input type="email" name="email">
+    </div>
+    <div>
+        パスワード　　     
+        <input type="password" name="password">
+    </div>
+    <button type="submit" style="background-color:#941f44; border-color:#941f44; color:aliceblue">送信</button><br>
+    <a href="{{url_for('new', id=account.id)}}">新規登録はこちら</a>
+</form>
+</div>

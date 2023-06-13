@@ -40,7 +40,7 @@ def first_login():
             account = Account.query.filter_by(email=email).first()
             if account.password == password:
               login_user(account) 
-              return render_template('items/basic_new.html')
+              return render_template('users/basic_new.html')
         except:
             flash('正しいメールアドレスとパスワードを入力して下さい。')
             # get_flashed_messages()
@@ -60,7 +60,7 @@ def login():
             account = Account.query.filter_by(email=email).first()
             if account.password == password:
               login_user(account) 
-              return redirect('/items')
+              return redirect('/users')
         except:
             flash('正しいメールアドレスとパスワードを入力して下さい。')
             # get_flashed_messages()
@@ -76,31 +76,31 @@ def logout():
 
 
 # 従業員一覧(アカウント情報)を表示
-@app.route('/items')
+@app.route('/users')
 @login_check
 def index():
   account = Account.query.order_by(Account.id.desc()).all()
-  return render_template('items/top.html', account=account)
+  return render_template('users/top.html', account=account)
 
 
 # 従業員詳細(基本情報)を表示
-@app.route('/items/<int:id>')
+@app.route('/users/<int:id>')
 @login_check
 def show(basic_id):
   account = Account.query.get(account_id)
   basic_information = Basic_information.query.get(account_id)
-  return render_template('items/show.html', basic_information=basic_information, account=account)
+  return render_template('users/show.html', basic_information=basic_information, account=account)
 
 
 # アカウント登録画面を表示(=user用)
-@app.route('/items/new')
+@app.route('/users/new')
 @login_check
 def new():
-  return render_template('items/new.html')
+  return render_template('users/new.html')
 
 
 # アカウント登録処理(=user用)
-@app.route('/items/create', methods=['POST'])
+@app.route('/users/create', methods=['POST'])
 @login_check
 def create():
   account = Account(
@@ -110,27 +110,27 @@ def create():
     name = request.form.get('name'),
     ruby = request.form.get('ruby'),
     dept = request.form.get('dept'),
-    group = request.form.get('group'),
+    group_name = request.form.get('group_name'),
     year = request.form.get('year'))
   try:
-    db.session.add(account)
+    db.session.add(accounts)
     db.session.commit()
   except:
     flash('入力した値を再度確認してください', 'error')
     return redirect(url_for('new'))
   flash('アカウントが作成されました', 'success')
-  return render_template('items/first.html')
+  return render_template('users/first.html')
 
 
 # 基本情報登録画面を表示
-@app.route('/items/new')
+@app.route('/users/new')
 @login_check
 def basic_new():
-  return render_template('items/basic_new.html')
+  return render_template('users/basic_new.html')
 
 
 # 基本情報登録処理
-@app.route('/items/create', methods=['POST'])
+@app.route('/users/create', methods=['POST'])
 @login_check
 def basic_create():
    basic_information = Basic_information(
@@ -142,7 +142,7 @@ def basic_create():
     hobby = request.form.get('hobby'),
     word = request.form.get('word'))
   try:
-    db.session.add(account)
+    db.session.add(accounts)
     db.session.commit()
   except:
     flash('入力した値を再度確認してください', 'error')
@@ -157,7 +157,7 @@ def basic_create():
 def edit(account_id):
   account = Account.query.get(account_id)
   basic_information = basic_information.query.get(account_id)
-  return render_template('items/update.html', account = account, basic_information = basic_information, email=email, password=password, name=name, ruby=ruby, team=team, year=year, hobby=hobby, word=word)
+  return render_template('users/update.html', account = account, basic_information = basic_information, email=email, password=password, name=name, ruby=ruby, team=team, year=year, hobby=hobby, word=word)
 
 
 # 登録情報修正処理
@@ -171,7 +171,7 @@ def update(account_id):
   name = request.form.get('name')
   ruby = request.form.get('ruby')
   dept = request.form.get('dept')
-  group = request.form.get('group')
+  group_name = request.form.get('group_name')
   year = request.form.get('year')
   birth_month = request.form.get('birth_month')
   birth_day = request.form.get('birth_day')
@@ -187,3 +187,9 @@ def update(account_id):
     return redirect(url_for('edit'))
   flash('登録情報が更新されました', 'success')
   return redirect(url_for('show'))
+
+@app.template_filter('staticfile')
+def staticfile_filter(fname):
+    path = os.path.join(app.root_path, 'static', fname)
+    mtime =  str(int(os.stat(path).st_mtime))
+    return '/static/' + fname + '?v=' + str(mtime)

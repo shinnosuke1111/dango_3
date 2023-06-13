@@ -1,25 +1,28 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="stylesheet" type="text/css"
+    href="{{ 'layout.css' | staticfile }}">
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
   </head>
-  <body>
+  <body style="background:#941f44">
     <h3>
-      <a href="{{url_for('index')}}">商品一覧</a>
+      <a href="{{url_for('index')}}">トップ</a>
       {% if session.get('admin_logged_in'): %}
         <a href="{{url_for('logout')}}">ログアウト</a>
+        <a href="{{url_for('new')}}">アカウント作成</a>
       {% else %}
         <a href="{{url_for('login')}}">ログイン</a>
       {% endif %}
     </h3>
     {% for category, message in get_flashed_messages(with_categories=true) %}
       {% if category == 'success' %}
-        <div style="background-color: #98fb98;">
+        <div style="background-color: #c93c3c;">
           {{ message }}
         </div>
       {% elif category == 'error' %}
-        <div style="background-color: #ffc0cb;">
+        <div style="background-color: #796262;">
           {{ message }}
         </div>
       {% endif %}
