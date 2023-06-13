@@ -104,8 +104,17 @@ def new():
 @app.route('/users/create', methods=['POST'])
 @login_check
 def create():
+  email = request.form.get('email')
+  password = request.form.get('password'),
+  name = request.form.get('name'),
+  ruby = request.form.get('ruby'),
+  dept = request.form.get('dept'),
+  group_name = request.form.get('group_name'),
+  year = request.form.get('year')
+  if not email or not password or not name or not ruby or not dept or not group_name or not year:
+    flash('入力した値を再度確認してください', 'error')
+    return redirect(url_for('new'))
   account = Account(
-    # account_id = request.form.get('account_id'),
     email = request.form.get('email'),
     password = request.form.get('password'),
     name = request.form.get('name'),
@@ -114,17 +123,6 @@ def create():
     group_name = request.form.get('group_name'),
     year = request.form.get('year'))
   try:
-    print("-----")
-    account.email is not null 
-    account.password is not null 
-    account.name is not null 
-    account.ruby is not null 
-    account.dept is not null 
-    account.group_name is not null 
-    account.year is not null 
-    print(account.email)
-    print(account.password)
-
     db.session.add(account)
     db.session.commit()
   except:
