@@ -114,6 +114,17 @@ def create():
     group_name = request.form.get('group_name'),
     year = request.form.get('year'))
   try:
+    print("-----")
+    account.email is not null 
+    account.password is not null 
+    account.name is not null 
+    account.ruby is not null 
+    account.dept is not null 
+    account.group_name is not null 
+    account.year is not null 
+    print(account.email)
+    print(account.password)
+
     db.session.add(account)
     db.session.commit()
   except:
@@ -173,18 +184,18 @@ def edit(account_id):
 def update(account_id):
   account = Account.query.get(account_id)
   basic_information = Basic_information.query.get(account_id)
-  email = request.form.get('email')
-  password = request.form.get('password')
-  name = request.form.get('name')
-  ruby = request.form.get('ruby')
-  dept = request.form.get('dept')
-  group_name = request.form.get('group_name')
-  year = request.form.get('year')
-  birth_month = request.form.get('birth_month')
-  birth_day = request.form.get('birth_day')
-  team = request.form.get('team')
-  hobby = request.form.get('hobby')
-  word = request.form.get('word')
+  account.email = request.form.get('email')
+  account.password = request.form.get('password')
+  account.name = request.form.get('name')
+  account.ruby = request.form.get('ruby')
+  account.dept = request.form.get('dept')
+  account.group_name = request.form.get('group_name')
+  account.year = request.form.get('year')
+  basic_information.birth_month = request.form.get('birth_month')
+  basic_information.birth_day = request.form.get('birth_day')
+  basic_information.team = request.form.get('team')
+  basic_information.hobby = request.form.get('hobby')
+  basic_information.word = request.form.get('word')
  
   try:
     db.session.merge(account)
@@ -192,11 +203,11 @@ def update(account_id):
     db.session.commit()
     
   except:
-    # flash('入力した値を再度確認してください', 'danger')
-    return "miss"
-    # return redirect(url_for('edit'))
+    flash('入力した値を再度確認してください', 'danger')
+    return redirect(url_for('edit'))
   flash('情報が更新されました', 'success')
-  return redirect(url_for('show'))
+  # return redirect(url_for('show'))
+  return redirect(url_for('index'))
 
 
 

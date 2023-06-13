@@ -2,15 +2,8 @@
   <link rel="stylesheet" type="text/css"
   href="{{ 'update.css' | staticfile }}">
 </head>
-{% extends "layout.html" %}
-{% block title %}
   基本情報登録
-{% endblock %}
-{% block body %}
 <h3>基本情報登録</h3>
-<a href="{{url_for('top')}}">
-  <button type="submit">SKIPする</button>
-</a>
 <table>
 <form action="{{url_for('basic_create')}}" method="POST">
   <tr>
@@ -71,7 +64,7 @@
   </tr>
   <tr>
     <td class="co">趣味</td>
-    <td>　　<textarea type="text" name="hooby" cols="30" rows="3" maxlength="90"
+    <td>　　<textarea type="text" name="hobby" cols="30" rows="3" maxlength="90"
       placeholder="プログラミング"></textarea></td>
   </tr>
    <!-- <input type="text" name="hobby"> -->

@@ -9,11 +9,11 @@
   <body style="background:#ffffffd7">
     <h3>
       <img src="OIP.jpg" alt="JFR" width="40" height="40">
-      <a href="{{url_for('top')}}">TOP</a>
+     
       {% if session.get('admin_logged_in'): %}
-        <a href="{{url_for('logout')}}">ログアウト</a>
+        <a href="{{url_for('user_logout')}}">ログアウト</a>
       {% else %}
-        <a href="{{url_for('login')}}">ログイン</a>
+        <a href="{{url_for('user_login')}}">ログイン</a>
       {% endif %}
     </h3>
     {% for category, message in get_flashed_messages(with_categories=true) %}
