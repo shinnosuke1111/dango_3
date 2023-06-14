@@ -21,11 +21,32 @@
   <tbody>
     {% for account in accounts %}
       <tr>
-        <td>{{ account.year }}</td>
-        <td>{{ account.name }}</td>
-        <td>{{ account.ruby }}</td>
-        <td>{{ account.dept }}部{{account.group_name}}グループ</td>
-        <td><a href="{{url_for('user_show', account_id=account.account_id)}}">詳細</a>
+        <td class="hi">{{ account.year }}</td>
+        <td>
+          {% if session['account_id']==account.account_id %}
+          <span class="ti2">{{ account.ruby }}</span></br>
+          <span class="zi">{{ account.name }}</span>
+          {% else %}
+          <span class="ti">{{ account.ruby }}</span></br>
+          {{ account.name }}
+          {% endif %}
+        </td>
+        <td class="hi">
+          {% if account.dept == '経営管理' %}
+          <span style="color:rgb(0, 180, 0)">◆</span>
+          {% elif account.dept == '人事' %}
+          <span style="color:rgb(255, 141, 35)">◆</span>
+          {% elif account.dept == 'システム開発運営' %}
+          <span style="color:rgb(255, 14, 94)">◆</span>
+          {% elif account.dept == 'システム運用管理' %}
+          <span style="color:rgb(0, 68, 255)">◆</span>
+          {% endif %}
+          {{ account.dept }}部　
+          {% if account.group_name != '---' %}
+          {{account.group_name}}グループ
+          {% endif %}</td>
+        <td class="hi">
+          <a href="{{url_for('user_show', account_id=account.account_id)}}">詳細</a>
         </td>
       </tr>
     {% endfor %}

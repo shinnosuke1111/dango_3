@@ -23,9 +23,24 @@
     {% for account in accounts %}
       <tr>
         <td>{{ account.year }}</td>
-        <td>{{ account.name }}</td>
-        <td>{{ account.ruby }}</td>
-        <td>{{ account.dept }}部{{account.group_name}}グループ</td>
+        <td>
+          <span class="ti">{{ account.ruby }}</span></br>
+          {{ account.name }}</td>
+        <td>
+          {% if account.dept == '経営管理' %}
+          <span style="color:rgb(117, 255, 117)">◆</span>
+          {% elif account.dept == '人事' %}
+          <span style="color:rgb(255, 201, 85)">◆</span>
+          {% elif account.dept == 'システム開発運営' %}
+          <span style="color:rgb(255, 81, 139)">◆</span>
+          {% elif account.dept == 'システム運用管理' %}
+          <span style="color:#52b1ff">◆</span>
+          {% endif %}
+          {{ account.dept }}部　
+          {% if account.group_name != '---' %}
+          {{account.group_name}}グループ
+          {% endif %}
+        </td>
         <td>
           <a href="{{url_for('show', account_id=account.account_id)}}">詳細</a>
           <form action="{{url_for('delete', account_id=account.account_id)}}" method="POST">

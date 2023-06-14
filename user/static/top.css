@@ -3,9 +3,22 @@ table {
     border-collapse: collapse;
       width:1000px
   }
-table tr{
+table td{
     border-bottom: solid 2px #d1d1d1;
   }
+td.hi{
+    height:4em;
+  }
+.ti{
+  font-size:x-small;
+  }
+.ti2{
+  font-size:x-small;
+  color:#be003c;
+  }
+.zi{
+  color:#be003c;
+}
 .co{
       color: #ffffff;
       background-color: #941f44;
