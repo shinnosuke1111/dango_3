@@ -5,7 +5,7 @@ from flask import Flask
 from lib.db import init_db
 
 # Flaskのアプリケーション本体を作成して、変数appに代入
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 
 # 「config.py」を設定ファイルとして扱う
 app.config.from_object('admin.config')

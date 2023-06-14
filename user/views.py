@@ -90,10 +90,12 @@ def user_create():
   flash('アカウントが作成されました', 'success')
   return render_template('users/basic_new.html')
   # return render_template('users/first.html')
+
 # 基本情報登録画面を表示
 @app.route('/users/basic_new')
 def user_basic_new():
   return render_template('users/basic_new.html')
+
 # 基本情報登録処理
 @app.route('/users/basic_create', methods=['POST'])
 def user_basic_create():
@@ -111,6 +113,7 @@ def user_basic_create():
     return redirect(url_for('user_basic_new'))
   flash('登録されました', 'success')
   return redirect(url_for('user_login'))
+
 # 登録情報修正画面を表示
 @app.route('/<int:account_id>/update')
 @login_check
@@ -124,27 +127,29 @@ def user_edit(account_id):
 @login_check
 def user_update(account_id):
   account = Account.query.get(account_id)
-  basic_information = Basic_information(account_id)
-  email = request.form.get('email')
-  password = request.form.get('password')
-  name = request.form.get('name')
-  ruby = request.form.get('ruby')
-  dept = request.form.get('dept')
-  group_name = request.form.get('group_name')
-  year = request.form.get('year')
-  birth_month = request.form.get('birth_month')
-  birth_day = request.form.get('birth_day')
-  team = request.form.get('team')
-  hobby = request.form.get('hobby')
-  word = request.form.get('word')
+  basic_information = Basic_information.query.get(account_id)
+  account.email = request.form.get('email')
+  account.password = request.form.get('password')
+  account.name = request.form.get('name')
+  account.ruby = request.form.get('ruby')
+  account.dept = request.form.get('dept')
+  account.group_name = request.form.get('group_name')
+  account.year = request.form.get('year')
+  basic_information.birth_month = request.form.get('birth_month')
+  basic_information.birth_day = request.form.get('birth_day')
+  basic_information.team = request.form.get('team')
+  basic_information.hobby = request.form.get('hobby')
+  basic_information.word = request.form.get('word')
   try:
-    db.session.merge(item)
+    db.session.merge(account)
+    db.session.merge(basic_information)
     db.session.commit()
   except:
     flash('入力した値を再度確認してください', 'danger')
     return redirect(url_for('user_edit'))
   flash('登録情報が更新されました', 'success')
-  return redirect(url_for('user_show'))
+  return redirect(url_for('user_index'))
+
 @app.template_filter('staticfile')
 def staticfile_filter(fname):
     path = os.path.join(app.root_path, 'static', fname)
