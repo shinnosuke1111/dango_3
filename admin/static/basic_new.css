@@ -1,0 +1,20 @@
+
+body {
+    background:#941f44;
+      color:rgb(223, 223, 223);
+  }
+
+table {
+    border-collapse: collapse;
+  }
+  table{
+    width:500px
+    }
+  table {
+    border-collapse: collapse;
+    border: solid 5px #941f44;/*表全体を線で囲う*/
+  }
+  table td{
+    border-right:3px solid  white;
+    border-left:3px solid  white;
+    }

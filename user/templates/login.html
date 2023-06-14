@@ -2,6 +2,11 @@
     <link rel="stylesheet" type="text/css"
     href="{{ 'layout.css' | staticfile }}">
 </head>
+{% extends "layout2.html" %}
+{% block title %}
+ログイン
+{% endblock %}
+{% block body %}
 <div style="text-align: center">
 <img src="/static/images/OIP.jpg" alt="JFR" width="200" height="200"><br>
 <h3>JFRIC従業員名簿</h3>
@@ -18,3 +23,4 @@
     <a href="{{url_for('user_new')}}">新規登録はこちら</a>
 </form>
 </div>
+{% endblock %}

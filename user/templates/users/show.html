@@ -23,24 +23,26 @@
     </tr>
     <tr>
       <td class="co">誕生日</td>
-      <td>　　{{ basic.information.birth_month }}月{{basic_information.birth_day}}日</td>
+      <td>　　{{ basic_information.birth_month }}月{{basic_information.birth_day}}日</td>
     </tr>
     <tr>
       <td class="co">趣味</td>
-      <td>　　{{ basic.information.hobby }}</td>
+      <td>　　{{ basic_information.hobby }}</td>
     </tr>
     <tr>
       <td class="co">ひとこと</td>
-      <td>　　{{ basic.information.word }}</td>
+      <td>　　{{ basic_information.word }}</td>
     </tr>
     <tr>
       <td>　</td>
       <td>　</td>
     </tr>
 </table>
+{% if account.account_id == session['account_id'] %}
 <div>
   <a href="{{url_for('user_edit', account_id=account.account_id)}}">
   <button type="submit" style="background-color:#941f44; border-color:#941f44; color:aliceblue">編集</button>
   </a>
 </div>
+{% endif %}
 {% endblock %}
