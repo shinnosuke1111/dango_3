@@ -1,6 +1,9 @@
 
 table {
     border-collapse: collapse;
+      width:1000px
+  }
+table tr{
     border-bottom: solid 2px #d1d1d1;
   }
 .co{

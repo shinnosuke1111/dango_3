@@ -1,12 +1,7 @@
 <head>
   <link rel="stylesheet" type="text/css"
-  href="{{ 'update.css' | staticfile }}">
+  href="{{ 'basic_new.css' | staticfile }}">
 </head>
-{% extends "layout.html" %}
-{% block title %}
-  基本情報登録
-{% endblock %}
-{% block body %}
 <h3>基本情報登録</h3>
 <table>
 <form action="{{url_for('basic_create')}}" method="POST">
@@ -84,4 +79,3 @@
   </div>
 </form>
 </form>
-{% endblock %}
