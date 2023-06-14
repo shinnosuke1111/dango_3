@@ -105,11 +105,11 @@ def new():
 @login_check
 def create():
   email = request.form.get('email')
-  password = request.form.get('password'),
-  name = request.form.get('name'),
-  ruby = request.form.get('ruby'),
-  dept = request.form.get('dept'),
-  group_name = request.form.get('group_name'),
+  password = request.form.get('password')
+  name = request.form.get('name')
+  ruby = request.form.get('ruby')
+  dept = request.form.get('dept')
+  group_name = request.form.get('group_name')
   year = request.form.get('year')
   if not email or not password or not name or not ruby or not dept or not group_name or not year:
     flash('入力した値を再度確認してください', 'error')
