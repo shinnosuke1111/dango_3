@@ -12,7 +12,9 @@ table td{
   border-right:3px solid #941f44;
   border-left:3px solid #941f44;
   }
-
   .co{
     color: #941f44;
 }
+p{
+  font-size:x-small;
+  }
