@@ -33,25 +33,6 @@ def login_check(view):
   return inner
 
 
-# 初回ログイン
-@app.route('/first_login', methods=['GET', 'POST'])
-def first_login():
-  if request.method == 'POST':
-    email = request.form.get('email')
-    password = request.form.get('password')
-    # Userテーブルからusernameに一致するユーザを取得
-    try:
-      account = Account.query.filter_by(email=email).first()
-
-      if account.password == password:
-        login_user(account) 
-        return render_template('users/basic_new.html')
-    except:
-      flash('正しいメールアドレスとパスワードを入力して下さい。')
-      # get_flashed_messages()
-      return render_template('first.html')
-
-
 
 
 # ログイン
@@ -71,8 +52,10 @@ def user_login():
         return redirect(url_for('user_index'))
     except:
       flash('正しいメールアドレスとパスワードを入力して下さい。')
+      return "ok"
+      # return render_template('login.html')
       # get_flashed_messages()
-  return render_template('login.html')
+  return render_template('users/top.html')
 
 
 
@@ -82,7 +65,7 @@ def user_login():
 def user_logout():
   session.pop('logged_in', None)
   flash('ログアウトしました', 'success')
-  return redirect(url_for('user_login'))
+  return render_template('login.html')
 
 
 # 従業員一覧(アカウント情報)を表示
@@ -132,14 +115,12 @@ def user_create():
 
 # 基本情報登録画面を表示
 @app.route('/users/basic_new')
-@login_check
 def user_basic_new():
   return render_template('users/basic_new.html')
 
 
 # 基本情報登録処理
 @app.route('/users/basic_create', methods=['POST'])
-@login_check
 def user_basic_create():
   basic_information = Basic_information(
     birth_month = request.form.get('birth_month'),
@@ -148,14 +129,13 @@ def user_basic_create():
     hobby = request.form.get('hobby'),
     word = request.form.get('word'))
   try:
-    db.session.add(account)
+    db.session.add(basic_information)
     db.session.commit()
   except:
     flash('入力した値を再度確認してください', 'error')
-    return "ok"
-    # return redirect(url_for('user_basic_new'))
+    return redirect(url_for('user_basic_new'))
   flash('登録されました', 'success')
-  return redirect(url_for('user_index'))
+  return redirect(url_for('user_login'))
 
 
 # 登録情報修正画面を表示
