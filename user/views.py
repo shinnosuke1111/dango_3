@@ -49,12 +49,14 @@ def user_logout():
   session.pop('logged_in', None)
   flash('ログアウトしました', 'success')
   return render_template('login.html')
+
 # 従業員一覧(アカウント情報)を表示
 @app.route('/users')
 @login_check
 def user_index():
   accounts = Account.query.order_by(Account.account_id.desc()).all()
   return render_template('users/top.html', accounts=accounts)
+
 # 従業員詳細(基本情報)を表示
 @app.route('/users/<int:account_id>')
 @login_check
@@ -62,10 +64,12 @@ def user_show(account_id):
   account = Account.query.get(account_id)
   basic_information = Basic_information.query.get(account_id)
   return render_template('users/show.html', basic_information=basic_information, account=account)
+
 # アカウント登録画面を表示(=user用)
 @app.route('/users/new')
 def user_new():
   return render_template('users/new.html')
+
 # アカウント登録処理(=user用)
 @app.route('/users/create', methods=['POST'])
 def user_create():
@@ -112,8 +116,9 @@ def user_basic_create():
 @login_check
 def user_edit(account_id):
   account = Account.query.get(account_id)
-  basic_information = basic_information.query.get(account_id)
+  basic_information = Basic_information.query.get(account_id)
   return render_template('users/update.html', account = account, basic_information = basic_information)
+
 # 登録情報修正処理
 @app.route('/<int:account_id>/edit', methods=['POST'])
 @login_check
