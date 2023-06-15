@@ -29,6 +29,7 @@
     <tr>
       <td class="co">所属</td>
       <td>　　<select name="dept">
+        <option value="{{ account.dept}}" selected>{{account.dept}}</option>
         <option value="経営管理">経営管理</option>
         <option value="人事">人事</option>
         <option value="システム開発運営">システム開発運営</option>
@@ -36,6 +37,7 @@
       </select>
       部<br>
       　　<select name="group_name">
+        <option value="{{ account.group_name }}" selected>{{ account.group_name }}</option>
         <option value="---">---</option>
         <option value="店舗顧客システム">店舗顧客システム</option>
         <option value="共通システム">共通システム</option>
@@ -53,6 +55,7 @@
     <tr>
       <td class="co">誕生日</td>
       <td>　　<select name="birth_month">
+          <option value="{{ basic_information.birth_month}}" selected>{{basic_information.birth_month}}</option>
           <option value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>
@@ -68,6 +71,7 @@
         </select>
         月
         <select name="birth_day">
+          <option value="{{ basic_information.birth_day}}" selected>{{basic_information.birth_day}}</option>
           <option value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>
@@ -104,15 +108,14 @@
     </tr>
     <tr>
       <td class="co">趣味</td>
-      <td>　　<textarea type="text" name="hooby" cols="30" rows="3" maxlength="90"
-        value="{{ basic_information.hobby }}">{{ basic_information.hobby }}</textarea></td>
+      <td>　　<textarea type="text" name="hobby" cols="30" rows="3" maxlength="90"
+        value="{{ basic_information.hobby }}">{{basic_information.hobby}}</textarea></td>
     </tr>
     <tr>
       <td class="co">ひとこと</td>
       <td>　　<textarea type="text" name="word" cols="30" rows="3" maxlength="90"
-        value="{{ basic_information.word }}">{{ basic_information.word }}</textarea></td>
+        value="{{ basic_information.word }}">{{basic_information.word}}</textarea></td>
     </tr>
-      <!-- <input type="text" name="hobby" value="{{ basic_information.hobby }}"> -->
   </table>
   <h4></h4>
     <div>

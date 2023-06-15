@@ -9,8 +9,11 @@ table tr{
 table{
   width:1000px
   }
+.ti{
+  font-size:x-small;
+  }
 .co{
-      color:#941f44;
+      color:#a41c44;
       background-color: rgb(223, 223, 223);
       font-weight:bold;
   }

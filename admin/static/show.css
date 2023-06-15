@@ -6,9 +6,12 @@ table{
   }
 table {
   border-collapse: collapse;
-  border: solid 5px #941f44;/*表全体を線で囲う*/
+  border: solid 5px #a41c44;/*表全体を線で囲う*/
 }
 table td{
   border-right:3px solid rgb(223, 223, 223);
   border-left:3px solid rgb(223, 223, 223);
   }
+td.ti{
+  font-size:x-small;
+}

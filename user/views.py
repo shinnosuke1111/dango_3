@@ -4,12 +4,15 @@ from flask import render_template, request, url_for, session, redirect, flash
 from user import app
 # Itemモデルを取得
 from lib.models import Account, Basic_information
+# osを取得
 import os
-# import flask_login
 # SQLAlchemyを取得
 from lib.db import db
 # デコレーターに使用
 from functools import wraps
+ALLOWED_EXTENSIONS = set(['png','jpeg','gif', 'jpg'])
+UPLOAD_FOLDER = './uploads'
+
 # ログインチェック処理
 def login_check(view):
   @wraps(view)
@@ -19,29 +22,30 @@ def login_check(view):
       return redirect(url_for('user_login'))
     return view(*args, **kwargs)
   return inner
+
 # ログイン
 @app.route('/login', methods=['GET', 'POST'])
 def user_login():
   if request.method == 'POST':
     email = request.form.get('email')
     password = request.form.get('password')
-    # Userテーブルからusernameに一致するユーザを取得
-    try:
-      account = Account.query.filter_by(email=email).first()
+    account = Account.query.filter_by(email=email).first()
+    if not account:
+      flash('正しいメールアドレスとパスワードを入力して下さい。', 'error')
+      return render_template('login.html')
+    else:
       if account.password == password:
         session['logged_in'] = True
         session['account_id'] = account.account_id
         flash('ログインしました', 'success')
-        print("login")
         return redirect(url_for('user_index'))
-    except:
-      flash('正しいメールアドレスとパスワードを入力して下さい。')
-      return render_template('login.html')
-      # get_flashed_messages()
-  elif not session.get('logged_in'):
-    return render_template('login.html')
-  else:
+      else:
+        flash('正しいパスワードを入力して下さい。', 'error')
+        return render_template('login.html')
+  elif session.get('logged_in'):
     return redirect(url_for('user_index'))
+  else:
+    return render_template('login.html')
 
 # ログアウト
 @app.route('/logout')
@@ -56,14 +60,20 @@ def user_logout():
 def user_index():
   accounts = Account.query.order_by(Account.account_id.desc()).all()
   return render_template('users/top.html', accounts=accounts)
-
+  
 # 従業員詳細(基本情報)を表示
 @app.route('/users/<int:account_id>')
 @login_check
 def user_show(account_id):
   account = Account.query.get(account_id)
   basic_information = Basic_information.query.get(account_id)
-  return render_template('users/show.html', basic_information=basic_information, account=account)
+  file_name = f'{account.account_id}.jpg'
+  check_path = os.path.join(app.static_folder, 'images', file_name)
+  if os.path.isfile(check_path):
+    file_path = f'/static/images/{file_name}'
+  else:
+    file_path = False
+  return render_template('users/show.html', account=account, basic_information=basic_information, file_path=file_path)
 
 # アカウント登録画面を表示(=user用)
 @app.route('/users/new')
@@ -89,7 +99,6 @@ def user_create():
     return redirect(url_for('user_new'))
   flash('アカウントが作成されました', 'success')
   return render_template('users/basic_new.html')
-  # return render_template('users/first.html')
 
 # 基本情報登録画面を表示
 @app.route('/users/basic_new')
@@ -149,7 +158,6 @@ def user_update(account_id):
     return redirect(url_for('user_edit'))
   flash('登録情報が更新されました', 'success')
   return redirect(url_for('user_index'))
-
 @app.template_filter('staticfile')
 def staticfile_filter(fname):
     path = os.path.join(app.root_path, 'static', fname)

@@ -7,11 +7,20 @@
   プロフィール
 {% endblock %}
 {% block body %}
+{% if file_path %}
+<img src="{{file_path}}" alt="JFR" width="200" height="200"><br>
+{% else %}
+  <img src="/static/images/th.jpg" alt="JFR" width="200" height='200'><br>
+{% endif %}
 <h3>{{ account.name }}</h3>
 <table>
     <tr>
-      <td class="co">氏名/フリガナ</td>
-      <td>　　{{ account.name }}/{{ account.ruby}}</td>
+      <td></td>
+      <td class="ti">　　　{{ account.ruby}}</td>
+    </tr>
+    <tr>
+      <td class="co">氏名</td>
+      <td>　　{{ account.name }}</td>
     </tr>
     <tr>
       <td class="co">所属</td>

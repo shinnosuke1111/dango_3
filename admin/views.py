@@ -1,34 +1,19 @@
 # flask関連のパッケージを取得
 from flask import render_template, request, url_for, session, redirect, flash
-
-
-
-
 # 「__init__.py」で宣言した変数appを取得
 from admin import app
-
-
-
-
 # Itemモデルを取得
 from lib.models import Account, Basic_information
-
 import os
-
-
-
-
 # SQLAlchemyを取得
 from lib.db import db
-
-
-
-
+#画像関連
+from werkzeug.utils import secure_filename
+from flask import send_from_directory
 # デコレーターに使用
 from functools import wraps
-
-
-
+ALLOWED_EXTENSIONS = set(['png','jpeg','gif', 'jpg'])
+UPLOAD_FOLDER = './uploads'
 
 # ログインチェック処理
 def login_check(view):
@@ -36,12 +21,9 @@ def login_check(view):
   def inner(*args, **kwargs):
     if not session.get('admin_logged_in'):
       flash('ログインしてください', 'error')
-      return redirect(url_for('login'))    
+      return redirect(url_for('login'))
     return view(*args, **kwargs)
   return inner
-
-
-
 
 # ログイン
 @app.route('/login', methods=['GET', 'POST'])
@@ -57,18 +39,12 @@ def login():
       return redirect(url_for('index'))
   return render_template('login.html')
 
-
-
-
 # ログアウト
 @app.route('/logout')
 def logout():
   session.pop('admin_logged_in', None)
   flash('ログアウトしました', 'success')
   return redirect(url_for('login'))
-
-
-
 
 # 従業員一覧(アカウント情報)を表示
 @app.route('/users')
@@ -77,28 +53,25 @@ def index():
   accounts = Account.query.order_by(Account.account_id.desc()).all()
   return render_template('users/top.html', accounts=accounts)
 
-
-
-
 # # 従業員詳細(基本情報)を表示
 @app.route('/users/<int:account_id>')
 @login_check
 def show(account_id):
   account = Account.query.get(account_id)
   basic_information = Basic_information.query.get(account_id)
-  return render_template('users/show.html', account=account, basic_information=basic_information)
-
-
-
+  file_name = f'{account.account_id}.jpg'
+  check_path = os.path.join(app.static_folder, 'images', file_name)
+  if os.path.isfile(check_path):
+    file_path = f'/static/images/{file_name}'
+  else:
+    file_path = False
+  return render_template('users/show.html', account=account, basic_information=basic_information, file_path=file_path)
 
 # アカウント作成画面を表示(=admin用)
 @app.route('/users/new')
 @login_check
 def new():
   return render_template('users/new.html')
-
-
-
 
 # アカウント作成処理(=admin用)
 @app.route('/users/create', methods=['POST'])
@@ -131,17 +104,11 @@ def create():
   flash('アカウントが作成されました', 'success')
   return render_template('users/basic_new.html')
 
-
-
-
 # 基本情報登録画面を表示
 @app.route('/users/basic_new')
 @login_check
 def basic_new():
   return render_template('users/basic_new.html')
-
-
-
 
 # 基本情報登録処理
 @app.route('/users/basic_create', methods=['POST'])
@@ -164,9 +131,6 @@ def basic_create():
   flash('基本情報が登録されました', 'success')
   return redirect(url_for('index'))
 
-
-
-
 # 登録情報修正画面を表示
 @app.route('/users/<int:account_id>/update')
 @login_check
@@ -174,7 +138,6 @@ def edit(account_id):
   account = Account.query.get(account_id)
   basic_information = Basic_information.query.get(account_id)
   return render_template('users/update.html', account = account, basic_information = basic_information)
-
 
 # 登録情報修正処理
 @app.route('/users/<int:account_id>/edit', methods=['POST'])
@@ -194,21 +157,16 @@ def update(account_id):
   basic_information.team = request.form.get('team')
   basic_information.hobby = request.form.get('hobby')
   basic_information.word = request.form.get('word')
- 
   try:
     db.session.merge(account)
     db.session.merge(basic_information)
     db.session.commit()
-    
   except:
     flash('入力した値を再度確認してください', 'danger')
     return redirect(url_for('edit'))
   flash('情報が更新されました', 'success')
   # return redirect(url_for('show'))
   return redirect(url_for('index'))
-
-
-
 
 # アカウント削除処理
 @app.route('/users/<int:account_id>/delete', methods=['POST'])
@@ -227,3 +185,59 @@ def staticfile_filter(fname):
     path = os.path.join(app.root_path, 'static', fname)
     mtime =  str(int(os.stat(path).st_mtime))
     return '/static/' + fname + '?v=' + str(mtime)
+
+#画像拡張子確認
+
+def allwed_file(filename):
+  return '.' in filename and filename.rsplit('.',1)[1].lower() in ALLOWED_EXTENSIONS
+
+# ファイルを受け取る方法の指定
+@app.route('/', methods=['GET', 'POST'])
+def uploads_file():
+    # リクエストがポストかどうかの判別
+    if request.method == 'POST':
+        # ファイルがなかった場合の処理
+        if 'file' not in request.files:
+            flash('ファイルがありません')
+            return redirect(request.url)
+        # データの取り出し
+        file = request.files['file']
+        # ファイル名がなかった時の処理
+        if file.filename == "":
+            flash('ファイルがありません')
+            return redirect(request.url)
+        # ファイルのチェック
+        if file and allwed_file(file.filename):
+            # 危険な文字を削除（サニタイズ処理）
+            filename = secure_filename(file.filename)
+            # ファイルの保存
+            file.save(os.path.join(UPLOAD_FOLDER, filename))
+            # アップロード後のページに転送
+            return redirect(url_for('uploaded_file', filename=filename))
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+    if request.method == 'GET':
+      return render_template('upload.html')
+    elif request.method == 'POST':
+      account_id = request.form.get('account_id')
+      file = request.files['example']
+      account = Account.query.get(account_id)
+      if str('.jpg') in file.filename:
+        filename = (f'{account.account_id}.jpg')
+      elif str('.png') in file.filename:
+        filename = (f'{account.account_id}.png')
+      elif str('.jpeg') in file.filename:
+        filename = (f'{account.account_id}.jpeg')
+      elif str('.gif') in file.filename:
+        filename = (f'{account.account_id}.gif')
+      else:
+        flash('指定された拡張子の画像を選択してください', 'error')
+        return render_template('update.html')
+      file.save(os.path.join(app.static_folder, 'images', filename))
+      return redirect(url_for('uploaded_file', filename=filename))
+
+# アップロード完了画面を表示
+@app.route('/uploaded_file/<string:filename>')
+def uploaded_file(filename):
+    return render_template('uploaded_file.html', filename=filename)
