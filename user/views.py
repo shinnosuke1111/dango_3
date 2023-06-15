@@ -10,6 +10,9 @@ import os
 from lib.db import db
 # デコレーターに使用
 from functools import wraps
+ALLOWED_EXTENSIONS = set(['png','jpeg','gif', 'jpg'])
+UPLOAD_FOLDER = './uploads'
+
 # ログインチェック処理
 def login_check(view):
   @wraps(view)
@@ -19,6 +22,7 @@ def login_check(view):
       return redirect(url_for('user_login'))
     return view(*args, **kwargs)
   return inner
+
 # ログイン
 @app.route('/login', methods=['GET', 'POST'])
 def user_login():
@@ -42,29 +46,40 @@ def user_login():
     return redirect(url_for('user_index'))
   else:
     return render_template('login.html')
+
 # ログアウト
 @app.route('/logout')
 def user_logout():
   session.pop('logged_in', None)
   flash('ログアウトしました', 'success')
   return render_template('login.html')
+
 # 従業員一覧(アカウント情報)を表示
 @app.route('/users')
 @login_check
 def user_index():
   accounts = Account.query.order_by(Account.account_id.desc()).all()
   return render_template('users/top.html', accounts=accounts)
+  
 # 従業員詳細(基本情報)を表示
 @app.route('/users/<int:account_id>')
 @login_check
 def user_show(account_id):
   account = Account.query.get(account_id)
   basic_information = Basic_information.query.get(account_id)
-  return render_template('users/show.html', basic_information=basic_information, account=account)
+  file_name = f'{account.account_id}.jpg'
+  check_path = os.path.join(app.static_folder, 'images', file_name)
+  if os.path.isfile(check_path):
+    file_path = f'/static/images/{file_name}'
+  else:
+    file_path = False
+  return render_template('users/show.html', account=account, basic_information=basic_information, file_path=file_path)
+
 # アカウント登録画面を表示(=user用)
 @app.route('/users/new')
 def user_new():
   return render_template('users/new.html')
+
 # アカウント登録処理(=user用)
 @app.route('/users/create', methods=['POST'])
 def user_create():
@@ -84,10 +99,12 @@ def user_create():
     return redirect(url_for('user_new'))
   flash('アカウントが作成されました', 'success')
   return render_template('users/basic_new.html')
+
 # 基本情報登録画面を表示
 @app.route('/users/basic_new')
 def user_basic_new():
   return render_template('users/basic_new.html')
+
 # 基本情報登録処理
 @app.route('/users/basic_create', methods=['POST'])
 def user_basic_create():
@@ -105,6 +122,7 @@ def user_basic_create():
     return redirect(url_for('user_basic_new'))
   flash('登録されました', 'success')
   return redirect(url_for('user_login'))
+
 # 登録情報修正画面を表示
 @app.route('/<int:account_id>/update')
 @login_check
@@ -112,6 +130,7 @@ def user_edit(account_id):
   account = Account.query.get(account_id)
   basic_information = Basic_information.query.get(account_id)
   return render_template('users/update.html', account = account, basic_information = basic_information)
+
 # 登録情報修正処理
 @app.route('/<int:account_id>/edit', methods=['POST'])
 @login_check
