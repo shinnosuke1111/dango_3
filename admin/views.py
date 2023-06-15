@@ -61,6 +61,7 @@ def show(account_id):
   else:
     file_path = False
   return render_template('users/show.html', account=account, basic_information=basic_information, file_path=file_path)
+  
 # アカウント作成画面を表示(=admin用)
 @app.route('/users/new')
 @login_check
