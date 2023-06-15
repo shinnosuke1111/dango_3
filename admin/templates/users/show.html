@@ -1,0 +1,51 @@
+<head>
+  <link rel="stylesheet" type="text/css"
+  href="{{ 'show.css' | staticfile }}">
+</head>
+{% extends "layout.html" %}
+{% block title %}
+  プロフィール
+{% endblock %}
+{% block body %}
+<h3>{{ account.name }}</h3>
+<table>
+  <tr>
+    <td></td>
+    <td class="ti">　　　{{ account.ruby}}</td>
+  </tr>
+    <tr>
+      <td>氏名</td>
+      <td>　　{{ account.name }}</td>
+    </tr>
+    <tr>
+      <td>所属</td>
+      <td>　　{{ account.dept }}<br>　　{{ account.group_name}}<br>　　{{basic_information.team}}</td>
+    </tr>
+    <tr>
+      <td>入社年度</td>
+      <td>　　{{ account.year }}年度</td>
+    </tr>
+    <tr>
+      <td>誕生日</td>
+      <td>　　{{ basic_information.birth_month }}月{{basic_information.birth_day}}日</td>
+    </tr>
+    <tr>
+      <td>趣味</td>
+      <td>　　{{ basic_information.hobby }}</td>
+    </tr>
+    <tr>
+      <td>ひとこと</td>
+      <td>　　{{ basic_information.word }}</td>
+    </tr>
+    <tr>
+      <td>　</td>
+      <td>　</td>
+    </tr>
+</table>
+<div>
+  <a href="{{url_for('edit', account_id=account.account_id)}}">
+  <button type="submit" style="background-color:rgb(223, 223, 223); border-color:rgb(223, 223, 223); color:#941f44">編集</button>
+  </a>
+</div>
+
+{% endblock %}

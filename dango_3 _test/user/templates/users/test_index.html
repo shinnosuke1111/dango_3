@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ja">
+ <head>   
+   <meta charset="UTF-8">  
+   <title>MessageBoard</title>
+ </head>
+ <body>
+   <h2>つぶやきコーナー</h2>
+     <form action="{{url_for('tubuyaki_result')}}" method="post">
+       <label>つぶやくこと<input type="text" size="50" name="post_message"></label><br>
+       <button type="submit" style="background-color:#941f44; border-color:#941f44; color:aliceblue">投稿する</button>
+     </form>
+    <h2>つぶやき</h2>
+     {% for message in messeges %}
+     {{ message.message }}<br>
+     {% endfor %}
+ </body>
+ </html>

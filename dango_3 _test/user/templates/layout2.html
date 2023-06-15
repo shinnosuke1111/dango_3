@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css"
+    href="{{ 'layout.css' | staticfile }}">
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+  </head>
+  <body style="background:#ffffffd7">
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+      {% if category == 'success' %}
+        <div style="background-color: #ff7a90;">
+          {{ message }}
+        </div>
+      {% elif category == 'error' %}
+        <div style="background-color: #ff7a90;">
+          {{ message }}
+        </div>
+      {% endif %}
+    {% endfor %}
+    {% block body %}{% endblock %}
+  </body>
+</html>
