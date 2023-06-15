@@ -61,7 +61,7 @@ def show(account_id):
   else:
     file_path = False
   return render_template('users/show.html', account=account, basic_information=basic_information, file_path=file_path)
-  
+
 # アカウント作成画面を表示(=admin用)
 @app.route('/users/new')
 @login_check
@@ -97,11 +97,13 @@ def create():
     return redirect(url_for('new'))
   flash('アカウントが作成されました', 'success')
   return render_template('users/basic_new.html')
+
 # 基本情報登録画面を表示
 @app.route('/users/basic_new')
 @login_check
 def basic_new():
   return render_template('users/basic_new.html')
+
 # 基本情報登録処理
 @app.route('/users/basic_create', methods=['POST'])
 @login_check
@@ -122,13 +124,20 @@ def basic_create():
     return redirect(url_for('basic_new'))
   flash('基本情報が登録されました', 'success')
   return redirect(url_for('index'))
+
 # 登録情報修正画面を表示
 @app.route('/users/<int:account_id>/update')
 @login_check
 def edit(account_id):
   account = Account.query.get(account_id)
   basic_information = Basic_information.query.get(account_id)
-  return render_template('users/update.html', account = account, basic_information = basic_information)
+  file_name = f'{account.account_id}.jpg'
+  check_path = os.path.join(app.static_folder, 'images', file_name)
+  if os.path.isfile(check_path):
+    file_path = f'/static/images/{file_name}'
+  else:
+    file_path = False
+  return render_template('users/update.html', account = account, basic_information = basic_information, file_path=file_path)
 # 登録情報修正処理
 @app.route('/users/<int:account_id>/edit', methods=['POST'])
 @login_check
@@ -205,23 +214,7 @@ def uploads_file():
             file.save(os.path.join(UPLOAD_FOLDER, filename))
             # アップロード後のページに転送
             return redirect(url_for('uploaded_file', filename=filename))
-    # # <!doctype html>
-    # <html>
-    #     <head>
-    #         <meta charset="UTF-8">
-    #         <title>
-    #             ファイルをアップロードして判定しよう
-    #         </title>
-    #     </head>
-    #     <body>
-    #         <h1>
-    #             ファイルをアップロードして判定しよう
-    #         </h1>
-    #         <form method = post enctype = multipart/form-data>
-    #         <p><input type=file name = file>
-    #         <input type = submit value = Upload>
-    #         </form>
-    #     </body>
+
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
     if request.method == 'GET':
@@ -231,6 +224,7 @@ def upload():
         filename = file.filename
         file.save(os.path.join(app.static_folder, 'images', filename))
         return redirect(url_for('uploaded_file', filename=filename))
+
 @app.route('/uploaded_file/<string:filename>')
 def uploaded_file(filename):
     return render_template('uploaded_file.html', filename=filename)
