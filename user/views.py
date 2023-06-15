@@ -158,8 +158,53 @@ def user_update(account_id):
     return redirect(url_for('user_edit'))
   flash('登録情報が更新されました', 'success')
   return redirect(url_for('user_index'))
+
 @app.template_filter('staticfile')
 def staticfile_filter(fname):
     path = os.path.join(app.root_path, 'static', fname)
     mtime =  str(int(os.stat(path).st_mtime))
     return '/static/' + fname + '?v=' + str(mtime)
+
+#画像拡張子確認
+
+def allwed_file(filename):
+  return '.' in filename and filename.rsplit('.',1)[1].lower() in ALLOWED_EXTENSIONS
+
+# ファイルを受け取る方法の指定
+@app.route('/', methods=['GET', 'POST'])
+def user_uploads_file():
+    # リクエストがポストかどうかの判別
+    if request.method == 'POST':
+        # ファイルがなかった場合の処理
+        if 'file' not in request.files:
+            flash('ファイルがありません')
+            return redirect(request.url)
+        # データの取り出し
+        file = request.files['file']
+        # ファイル名がなかった時の処理
+        if file.filename == "":
+            flash('ファイルがありません')
+            return redirect(request.url)
+        # ファイルのチェック
+        if file and allwed_file(file.filename):
+            # 危険な文字を削除（サニタイズ処理）
+            filename = secure_filename(file.filename)
+            print("ファイルのチェック")
+            # ファイルの保存
+            print(UPLOAD_FOLDER)
+            file.save(os.path.join(UPLOAD_FOLDER, filename))
+            # アップロード後のページに転送
+            return redirect(url_for('uploaded_file', filename=filename))
+
+@app.route('/upload', methods=['GET', 'POST'])
+def user_upload():
+    if request.method == 'GET':
+        return render_template('upload.html')
+    elif request.method == 'POST':
+        file = request.files['example']
+        filename = file.filename
+        file.save(os.path.join(app.static_folder, 'images', filename))
+        return redirect(url_for('uploaded_file', filename=filename))
+@app.route('/uploaded_file/<string:filename>')
+def user_uploaded_file(filename):
+    return render_template('uploaded_file.html', filename=filename)

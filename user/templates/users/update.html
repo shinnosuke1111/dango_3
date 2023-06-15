@@ -8,6 +8,16 @@
 {% endblock %}
 {% block body %}
 <h3>編集</h3>
+{% if file_path %}
+<img src="{{file_path}}" alt="JFR" width="200" height="200"><br>
+{% else %}
+  <img src="/static/images/th.jpg" alt="JFR" width="200" height='200'><br>
+{% endif %}
+<form action="{{url_for('user_upload')}}" method="POST" enctype="multipart/form-data">
+  <input type="file" name="example">
+  <input type="submit" value="アップロード">
+</form>
+<p>画像拡張子:JPEG, JPG, PNG, GIFのみ</p><br>
 <table>
   <form action="{{url_for('user_update', account_id=account.account_id)}}" method="POST">
     <tr>
