@@ -3,8 +3,7 @@ from flask import render_template, request, url_for, session, redirect, flash
 # 「__init__.py」で宣言した変数appを取得
 from admin import app
 # Itemモデルを取得
-from lib.models import Account, Basic_information
-# , Message
+from lib.models import Account, Basic_information, Message
 import os
 # SQLAlchemyを取得
 from lib.db import db
@@ -43,12 +42,15 @@ def logout():
   session.pop('admin_logged_in', None)
   flash('ログアウトしました', 'success')
   return redirect(url_for('login'))
+
 # 従業員一覧(アカウント情報)を表示
 @app.route('/users')
 @login_check
 def index():
+  messages = Message.query.order_by(Message.tweet_id.desc()).all()
   accounts = Account.query.order_by(Account.account_id.desc()).all()
-  return render_template('users/top.html', accounts=accounts)
+  return render_template('users/top.html', accounts=accounts, messages=messages)
+  
 # # 従業員詳細(基本情報)を表示
 @app.route('/users/<int:account_id>')
 @login_check
@@ -237,3 +239,12 @@ def upload():
 def uploaded_file(filename):
     flash('画像が更新されました', 'success')
     return redirect(url_for('index'))
+
+@app.route('/users/<int:tweet_id>/delete', methods=['POST'])
+@login_check
+def tubu_delete(tweet_id):
+  message = Message.query.get(tweet_id)
+  db.session.delete(message)
+  db.session.commit()
+  flash('投稿が削除されました', 'success')
+  return redirect(url_for('user_index'))

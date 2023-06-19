@@ -36,6 +36,7 @@ def user_login():
     else:
       if account.password == password:
         session['logged_in'] = True
+        session['name'] = account.name
         session['account_id'] = account.account_id
         flash('ログインしました', 'success')
         return redirect(url_for('user_index'))
@@ -58,8 +59,9 @@ def user_logout():
 @app.route('/users')
 @login_check
 def user_index():
+  messages = Message.query.order_by(Message.tweet_id.desc()).all()
   accounts = Account.query.order_by(Account.account_id.desc()).all()
-  return render_template('users/top.html', accounts=accounts)
+  return render_template('users/top.html', accounts=accounts, messages=messages)
   
 # 従業員詳細(基本情報)を表示
 @app.route('/users/<int:account_id>')
@@ -223,12 +225,28 @@ def user_uploaded_file(filename):
 def tubuyaki_result():
   if request.method == 'POST':
     message = Message(
-      account_id = request.form.get('account_id'),
+      name = request.form.get('name'),
       message = request.form.get('message')
       )
     db.session.add(message)
     db.session.commit()
-    return 'OK'
-    # return render_template('users/basic_new.html')
+    flash('投稿が完了しました', 'success')
+    return redirect(url_for('user_index'))
   else:
     pass
+
+    # つぶやきの削除
+# @app.route('/users/delete/<int:tweet_id>', methods=['POST'])
+# @login_check
+# def tubuyaki_delete(tweet_id):
+#   print(tweet_id)
+
+# つぶやきの削除
+@app.route('/users/<int:tweet_id>/delete', methods=['POST'])
+@login_check
+def tubuyaki_delete(tweet_id):
+  message = Message.query.get(tweet_id)
+  db.session.delete(message)
+  db.session.commit()
+  flash('投稿が削除されました', 'success')
+  return redirect(url_for('user_index'))[]

@@ -1,4 +1,3 @@
-
 table {
     border-collapse: collapse;
     /* border-bottom: solid 2px #ffe5e5; */
@@ -20,4 +19,20 @@ table{
 a {
   color:rgb(255, 109, 109);
 }
+td.hi{
+  height:4em;
+}
+.listScroll{
+  /*テーブルの横幅が250px以上の場合スクロール*/
+  width: 1000px;
+/*テーブルの縦幅が100px以上の場合スクロール*/
+  height: 300px;
+  /*縦スクロール*/
+overflow: scroll;
+  /*横スクロール*/
+  overflow-x: hidden;
+}
 
+.aka{
+  color:#ffffff;
+  }

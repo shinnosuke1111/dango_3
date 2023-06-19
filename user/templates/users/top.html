@@ -7,18 +7,42 @@
   従業員一覧
 {% endblock %}
 {% block body %}
-<h3>つぶやき広場</h3>
-<h3 style="display: none;">{{session['account_id']}}</h3>
+<h3 class="aka">◆つぶやき広場</h3>
+<h5>[{{session['name']}}]</h5>
 <form action="{{url_for('tubuyaki_result')}}" method="post">
-  <input type="account_id" name="account_id" value="{{ account.account_id }}" style="display: none;">
-  <label>つぶやき<input type="text" size="50" name="message"></label><br>
+  <input type="text" name="name" value="{{ session['name'] }}" style="display: none;">
+  <label><input type="text" size="50" name="message"></label>
   <button type="submit" style="background-color:#941f44; border-color:#941f44; color:aliceblue">投稿する</button>
 </form>
-<h3>最近のつぶやき</h3>
-{% for message in messeges %}
-{{ message.message }}<br>
-{% endfor %}
-<h3>従業員一覧</h3>
+<div class="listScroll">
+  <table>
+    <thead>
+      <tr>
+        <td class="co">名前</td>
+        <td class="co">つぶやき</td>
+        <td class="co"></td>
+      </tr>
+    </thead>
+    <tbody>
+      {% for message in messages %}
+        <tr>
+          <td class="hi">　{{ message.name }}</td>
+          <td class="hi">　{{ message.message }}</td>
+          <td>
+            {% if message.name == session['name'] %}
+            <div>
+              <form action="{{url_for('tubuyaki_delete', tweet_id=message.tweet_id)}}" method="POST">
+                <button type="submit" style="background-color:rgb(223, 223, 223); border-color:rgb(223, 223, 223); color:#941f44">削除</button>
+              </form>
+            </div>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<h3 class="aka">◆従業員一覧</h3>
 <table>
   <thead>
     <tr>
