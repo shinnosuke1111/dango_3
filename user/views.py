@@ -235,12 +235,6 @@ def tubuyaki_result():
   else:
     pass
 
-    # つぶやきの削除
-# @app.route('/users/delete/<int:tweet_id>', methods=['POST'])
-# @login_check
-# def tubuyaki_delete(tweet_id):
-#   print(tweet_id)
-
 # つぶやきの削除
 @app.route('/users/<int:tweet_id>/delete', methods=['POST'])
 @login_check
@@ -249,4 +243,4 @@ def tubuyaki_delete(tweet_id):
   db.session.delete(message)
   db.session.commit()
   flash('投稿が削除されました', 'success')
-  return redirect(url_for('user_index'))[]
+  return redirect(url_for('user_index'))
