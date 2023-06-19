@@ -3,7 +3,7 @@ from flask import render_template, request, url_for, session, redirect, flash
 # 「__init__.py」で宣言した変数appを取得
 from admin import app
 # Itemモデルを取得
-from lib.models import Account, Basic_information
+from lib.models import Account, Basic_information, Message
 import os
 # SQLAlchemyを取得
 from lib.db import db
@@ -14,7 +14,6 @@ from flask import send_from_directory
 from functools import wraps
 ALLOWED_EXTENSIONS = set(['png','jpeg','gif', 'jpg'])
 UPLOAD_FOLDER = './uploads'
-
 # ログインチェック処理
 def login_check(view):
   @wraps(view)
@@ -24,9 +23,8 @@ def login_check(view):
       return redirect(url_for('login'))
     return view(*args, **kwargs)
   return inner
-
 # ログイン
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def login():
   if request.method == 'POST':
     if request.form.get('email') != app.config['ADMIN_USER_ID']:
@@ -38,7 +36,6 @@ def login():
       flash('ログインしました', 'success')
       return redirect(url_for('index'))
   return render_template('login.html')
-
 # ログアウト
 @app.route('/logout')
 def logout():
@@ -50,9 +47,10 @@ def logout():
 @app.route('/users')
 @login_check
 def index():
+  messages = Message.query.order_by(Message.tweet_id.desc()).all()
   accounts = Account.query.order_by(Account.account_id.desc()).all()
-  return render_template('users/top.html', accounts=accounts)
-
+  return render_template('users/top.html', accounts=accounts, messages=messages)
+  
 # # 従業員詳細(基本情報)を表示
 @app.route('/users/<int:account_id>')
 @login_check
@@ -72,7 +70,6 @@ def show(account_id):
 @login_check
 def new():
   return render_template('users/new.html')
-
 # アカウント作成処理(=admin用)
 @app.route('/users/create', methods=['POST'])
 @login_check
@@ -137,8 +134,13 @@ def basic_create():
 def edit(account_id):
   account = Account.query.get(account_id)
   basic_information = Basic_information.query.get(account_id)
-  return render_template('users/update.html', account = account, basic_information = basic_information)
-
+  file_name = f'{account.account_id}.jpg'
+  check_path = os.path.join(app.static_folder, 'images', file_name)
+  if os.path.isfile(check_path):
+    file_path = f'/static/images/{file_name}'
+  else:
+    file_path = False
+  return render_template('users/update.html', account = account, basic_information = basic_information, file_path=file_path)
 # 登録情報修正処理
 @app.route('/users/<int:account_id>/edit', methods=['POST'])
 @login_check
@@ -167,7 +169,6 @@ def update(account_id):
   flash('情報が更新されました', 'success')
   # return redirect(url_for('show'))
   return redirect(url_for('index'))
-
 # アカウント削除処理
 @app.route('/users/<int:account_id>/delete', methods=['POST'])
 @login_check
@@ -187,10 +188,8 @@ def staticfile_filter(fname):
     return '/static/' + fname + '?v=' + str(mtime)
 
 #画像拡張子確認
-
 def allwed_file(filename):
   return '.' in filename and filename.rsplit('.',1)[1].lower() in ALLOWED_EXTENSIONS
-
 # ファイルを受け取る方法の指定
 @app.route('/', methods=['GET', 'POST'])
 def uploads_file():
@@ -214,7 +213,6 @@ def uploads_file():
             file.save(os.path.join(UPLOAD_FOLDER, filename))
             # アップロード後のページに転送
             return redirect(url_for('uploaded_file', filename=filename))
-
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
     if request.method == 'GET':
@@ -236,8 +234,17 @@ def upload():
         return render_template('update.html')
       file.save(os.path.join(app.static_folder, 'images', filename))
       return redirect(url_for('uploaded_file', filename=filename))
-
 # アップロード完了画面を表示
 @app.route('/uploaded_file/<string:filename>')
 def uploaded_file(filename):
-    return render_template('uploaded_file.html', filename=filename)
+    flash('画像が更新されました', 'success')
+    return redirect(url_for('index'))
+
+@app.route('/users/<int:tweet_id>/delete', methods=['POST'])
+@login_check
+def tubu_delete(tweet_id):
+  message = Message.query.get(tweet_id)
+  db.session.delete(message)
+  db.session.commit()
+  flash('投稿が削除されました', 'success')
+  return redirect(url_for('user_index'))

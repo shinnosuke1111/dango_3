@@ -29,3 +29,22 @@ a{
   color:#cf0042;
 }
 
+.listScroll{
+  /*テーブルの横幅が250px以上の場合スクロール*/
+  width: 1000px;
+/*テーブルの縦幅が100px以上の場合スクロール*/
+  height: 300px;
+  /*縦スクロール*/
+overflow: scroll;
+  /*横スクロール*/
+  overflow-x: hidden;
+}
+
+.aka{
+  color:#be003c;
+  }
+th{
+  position: sticky;
+  top: 0;
+  left: 0;
+}

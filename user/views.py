@@ -3,7 +3,7 @@ from flask import render_template, request, url_for, session, redirect, flash
 # 「__init__.py」で宣言した変数appを取得
 from user import app
 # Itemモデルを取得
-from lib.models import Account, Basic_information
+from lib.models import Account, Basic_information, Message
 # osを取得
 import os
 # SQLAlchemyを取得
@@ -24,7 +24,7 @@ def login_check(view):
   return inner
 
 # ログイン
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def user_login():
   if request.method == 'POST':
     email = request.form.get('email')
@@ -36,6 +36,7 @@ def user_login():
     else:
       if account.password == password:
         session['logged_in'] = True
+        session['name'] = account.name
         session['account_id'] = account.account_id
         flash('ログインしました', 'success')
         return redirect(url_for('user_index'))
@@ -58,8 +59,9 @@ def user_logout():
 @app.route('/users')
 @login_check
 def user_index():
+  messages = Message.query.order_by(Message.tweet_id.desc()).all()
   accounts = Account.query.order_by(Account.account_id.desc()).all()
-  return render_template('users/top.html', accounts=accounts)
+  return render_template('users/top.html', accounts=accounts, messages=messages)
   
 # 従業員詳細(基本情報)を表示
 @app.route('/users/<int:account_id>')
@@ -158,8 +160,87 @@ def user_update(account_id):
     return redirect(url_for('user_edit'))
   flash('登録情報が更新されました', 'success')
   return redirect(url_for('user_index'))
+
 @app.template_filter('staticfile')
 def staticfile_filter(fname):
     path = os.path.join(app.root_path, 'static', fname)
     mtime =  str(int(os.stat(path).st_mtime))
     return '/static/' + fname + '?v=' + str(mtime)
+
+#画像拡張子確認
+def allwed_file(filename):
+  return '.' in filename and filename.rsplit('.',1)[1].lower() in ALLOWED_EXTENSIONS
+
+# ファイルを受け取る方法の指定
+@app.route('/', methods=['GET', 'POST'])
+def user_uploads_file():
+    # リクエストがポストかどうかの判別
+    if request.method == 'POST':
+        # ファイルがなかった場合の処理
+        if 'file' not in request.files:
+            flash('ファイルがありません')
+            return redirect(request.url)
+        # データの取り出し
+        file = request.files['file']
+        # ファイル名がなかった時の処理
+        if file.filename == "":
+            flash('ファイルがありません')
+            return redirect(request.url)
+        # ファイルのチェック
+        if file and allwed_file(file.filename):
+            # 危険な文字を削除（サニタイズ処理）
+            filename = secure_filename(file.filename)
+            # ファイルの保存
+            file.save(os.path.join(UPLOAD_FOLDER, filename))
+            # アップロード後のページに転送
+            return redirect(url_for('uploaded_file', filename=filename))
+@app.route('/upload', methods=['GET', 'POST'])
+def user_upload():
+    if request.method == 'GET':
+      return render_template('upload.html')
+    elif request.method == 'POST':
+      account_id = request.form.get('account_id')
+      file = request.files['example']
+      account = Account.query.get(account_id)
+      if str('.jpg') in file.filename:
+        filename = (f'{account.account_id}.jpg')
+      elif str('.png') in file.filename:
+        filename = (f'{account.account_id}.png')
+      elif str('.jpeg') in file.filename:
+        filename = (f'{account.account_id}.jpeg')
+      elif str('.gif') in file.filename:
+        filename = (f'{account.account_id}.gif')
+      else:
+        flash('指定された拡張子の画像を選択してください', 'error')
+        return render_template('update.html')
+      file.save(os.path.join(app.static_folder, 'images', filename))
+      return redirect(url_for('user_uploaded_file', filename=filename))
+# アップロード完了画面を表示
+@app.route('/uploaded_file/<string:filename>')
+def user_uploaded_file(filename):
+    flash('画像が更新されました', 'success')
+    return redirect(url_for('user_index'))
+
+@app.route("/tubuyaki/result", methods=['POST'])
+def tubuyaki_result():
+  if request.method == 'POST':
+    message = Message(
+      name = request.form.get('name'),
+      message = request.form.get('message')
+      )
+    db.session.add(message)
+    db.session.commit()
+    flash('投稿が完了しました', 'success')
+    return redirect(url_for('user_index'))
+  else:
+    pass
+
+# つぶやきの削除
+@app.route('/users/<int:tweet_id>/delete', methods=['POST'])
+@login_check
+def tubuyaki_delete(tweet_id):
+  message = Message.query.get(tweet_id)
+  db.session.delete(message)
+  db.session.commit()
+  flash('投稿が削除されました', 'success')
+  return redirect(url_for('user_index'))
