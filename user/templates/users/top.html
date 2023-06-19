@@ -7,6 +7,17 @@
   従業員一覧
 {% endblock %}
 {% block body %}
+<h3>つぶやき広場</h3>
+<h3 style="display: none;">{{session['account_id']}}</h3>
+<form action="{{url_for('tubuyaki_result')}}" method="post">
+  <input type="account_id" name="account_id" value="{{ account.account_id }}" style="display: none;">
+  <label>つぶやき<input type="text" size="50" name="message"></label><br>
+  <button type="submit" style="background-color:#941f44; border-color:#941f44; color:aliceblue">投稿する</button>
+</form>
+<h3>最近のつぶやき</h3>
+{% for message in messeges %}
+{{ message.message }}<br>
+{% endfor %}
 <h3>従業員一覧</h3>
 <table>
   <thead>

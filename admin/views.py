@@ -4,6 +4,7 @@ from flask import render_template, request, url_for, session, redirect, flash
 from admin import app
 # Itemモデルを取得
 from lib.models import Account, Basic_information
+# , Message
 import os
 # SQLAlchemyを取得
 from lib.db import db

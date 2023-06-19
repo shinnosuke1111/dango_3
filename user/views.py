@@ -3,7 +3,7 @@ from flask import render_template, request, url_for, session, redirect, flash
 # 「__init__.py」で宣言した変数appを取得
 from user import app
 # Itemモデルを取得
-from lib.models import Account, Basic_information
+from lib.models import Account, Basic_information, Message
 # osを取得
 import os
 # SQLAlchemyを取得
@@ -218,3 +218,17 @@ def user_upload():
 def user_uploaded_file(filename):
     flash('画像が更新されました', 'success')
     return redirect(url_for('user_index'))
+
+@app.route("/tubuyaki/result", methods=['POST'])
+def tubuyaki_result():
+  if request.method == 'POST':
+    message = Message(
+      account_id = request.form.get('account_id'),
+      message = request.form.get('message')
+      )
+    db.session.add(message)
+    db.session.commit()
+    return 'OK'
+    # return render_template('users/basic_new.html')
+  else:
+    pass
