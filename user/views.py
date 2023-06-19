@@ -166,7 +166,6 @@ def staticfile_filter(fname):
     return '/static/' + fname + '?v=' + str(mtime)
 
 #画像拡張子確認
-
 def allwed_file(filename):
   return '.' in filename and filename.rsplit('.',1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -189,22 +188,33 @@ def user_uploads_file():
         if file and allwed_file(file.filename):
             # 危険な文字を削除（サニタイズ処理）
             filename = secure_filename(file.filename)
-            print("ファイルのチェック")
             # ファイルの保存
-            print(UPLOAD_FOLDER)
             file.save(os.path.join(UPLOAD_FOLDER, filename))
             # アップロード後のページに転送
             return redirect(url_for('uploaded_file', filename=filename))
-
 @app.route('/upload', methods=['GET', 'POST'])
 def user_upload():
     if request.method == 'GET':
-        return render_template('upload.html')
+      return render_template('upload.html')
     elif request.method == 'POST':
-        file = request.files['example']
-        filename = file.filename
-        file.save(os.path.join(app.static_folder, 'images', filename))
-        return redirect(url_for('uploaded_file', filename=filename))
+      account_id = request.form.get('account_id')
+      file = request.files['example']
+      account = Account.query.get(account_id)
+      if str('.jpg') in file.filename:
+        filename = (f'{account.account_id}.jpg')
+      elif str('.png') in file.filename:
+        filename = (f'{account.account_id}.png')
+      elif str('.jpeg') in file.filename:
+        filename = (f'{account.account_id}.jpeg')
+      elif str('.gif') in file.filename:
+        filename = (f'{account.account_id}.gif')
+      else:
+        flash('指定された拡張子の画像を選択してください', 'error')
+        return render_template('update.html')
+      file.save(os.path.join(app.static_folder, 'images', filename))
+      return redirect(url_for('user_uploaded_file', filename=filename))
+# アップロード完了画面を表示
 @app.route('/uploaded_file/<string:filename>')
 def user_uploaded_file(filename):
-    return render_template('uploaded_file.html', filename=filename)
+    flash('画像が更新されました', 'success')
+    return redirect(url_for('user_index'))

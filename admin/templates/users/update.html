@@ -16,6 +16,7 @@
 {% endif %}
 
 <form action="{{url_for('upload')}}" method="POST" enctype="multipart/form-data">
+  <input type="account_id" name="account_id" value="{{ account.account_id }}" style="display: none;">
   <input type="file" name="example">
   <input type="submit" value="アップロード">
 </form>
