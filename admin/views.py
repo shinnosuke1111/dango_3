@@ -24,7 +24,7 @@ def login_check(view):
     return view(*args, **kwargs)
   return inner
 # ログイン
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def login():
   if request.method == 'POST':
     if request.form.get('email') != app.config['ADMIN_USER_ID']:

@@ -24,7 +24,7 @@ def login_check(view):
   return inner
 
 # ログイン
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def user_login():
   if request.method == 'POST':
     email = request.form.get('email')
